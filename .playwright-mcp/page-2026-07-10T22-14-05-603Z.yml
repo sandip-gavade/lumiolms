@@ -1,0 +1,54 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - generic [ref=f2e4]:
+      - link "lumio" [ref=f2e5] [cursor=pointer]:
+        - /url: /login
+      - heading "Create your account" [level=1] [ref=f2e10]
+      - paragraph [ref=f2e11]: Start learning today — it's free to join.
+      - generic [ref=f2e12]:
+        - generic [ref=f2e13]: Full name
+        - textbox "Alex Rivera" [ref=f2e14]
+        - generic [ref=f2e15]: Email
+        - textbox "you@example.com" [ref=f2e16]
+        - generic [ref=f2e17]: Password
+        - textbox "At least 10 characters" [ref=f2e18]
+        - button "Create account" [ref=f2e19] [cursor=pointer]
+      - paragraph [ref=f2e20]: By signing up you agree to our Terms & Privacy Policy.
+      - paragraph [ref=f2e21]:
+        - text: Already have an account?
+        - link "Log in" [ref=f2e22] [cursor=pointer]:
+          - /url: /login
+    - generic [ref=f2e26]:
+      - heading "Everything you need to level up." [level=2] [ref=f2e27]
+      - generic [ref=f2e28]:
+        - generic [ref=f2e29]:
+          - generic [ref=f2e30]: 🎬
+          - generic [ref=f2e31]:
+            - generic [ref=f2e32]: Learn by building
+            - generic [ref=f2e33]: Every course centers on real, finished projects you can show off.
+        - generic [ref=f2e34]:
+          - generic [ref=f2e35]: ∞
+          - generic [ref=f2e36]:
+            - generic [ref=f2e37]: Lifetime access
+            - generic [ref=f2e38]: Buy once, revisit anytime — across web and mobile.
+        - generic [ref=f2e39]:
+          - generic [ref=f2e40]: 🏆
+          - generic [ref=f2e41]:
+            - generic [ref=f2e42]: Earn certificates
+            - generic [ref=f2e43]: Shareable certificates to add to your profile and résumé.
+        - generic [ref=f2e44]:
+          - generic [ref=f2e45]: 💬
+          - generic [ref=f2e46]:
+            - generic [ref=f2e47]: Real instructor support
+            - generic [ref=f2e48]: Ask questions and get answers in active course Q&A.
+      - generic [ref=f2e49]:
+        - generic [ref=f2e50]:
+          - generic [ref=f2e51]: 1,200+
+          - generic [ref=f2e52]: Courses
+        - generic [ref=f2e53]:
+          - generic [ref=f2e54]: 40k+
+          - generic [ref=f2e55]: Learners
+        - generic [ref=f2e56]:
+          - generic [ref=f2e57]: 4.8★
+          - generic [ref=f2e58]: Avg rating
+  - alert [ref=f2e59]

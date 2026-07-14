@@ -1,0 +1,636 @@
+<title>Lumio — System Design Overview</title>
+<style>
+  :root {
+    --ink: #151a22;
+    --paper: #eef1f4;
+    --paper-raised: #ffffff;
+    --accent: #c9791f;
+    --accent-soft: #e3a23c;
+    --structural: #3c4e77;
+    --structural-soft: #64749e;
+    --line: rgba(60, 78, 122, 0.16);
+    --line-strong: rgba(60, 78, 122, 0.32);
+    --muted: #566078;
+    --tag-bg: rgba(60, 78, 122, 0.08);
+    --code-bg: #ffffff;
+    --shadow: 0 1px 2px rgba(21, 26, 34, 0.04), 0 8px 24px -12px rgba(21, 26, 34, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #eef1f4;
+      --paper: #12151c;
+      --paper-raised: #191d26;
+      --accent: #e6a94c;
+      --accent-soft: #f0be74;
+      --structural: #8ea0d0;
+      --structural-soft: #6d7fac;
+      --line: rgba(142, 160, 208, 0.16);
+      --line-strong: rgba(142, 160, 208, 0.3);
+      --muted: #9aa4bc;
+      --tag-bg: rgba(142, 160, 208, 0.1);
+      --code-bg: #0f1218;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 32px -14px rgba(0, 0, 0, 0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #eef1f4;
+    --paper: #12151c;
+    --paper-raised: #191d26;
+    --accent: #e6a94c;
+    --accent-soft: #f0be74;
+    --structural: #8ea0d0;
+    --structural-soft: #6d7fac;
+    --line: rgba(142, 160, 208, 0.16);
+    --line-strong: rgba(142, 160, 208, 0.3);
+    --muted: #9aa4bc;
+    --tag-bg: rgba(142, 160, 208, 0.1);
+    --code-bg: #0f1218;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 32px -14px rgba(0, 0, 0, 0.5);
+  }
+  :root[data-theme="light"] {
+    --ink: #151a22;
+    --paper: #eef1f4;
+    --paper-raised: #ffffff;
+    --accent: #c9791f;
+    --accent-soft: #e3a23c;
+    --structural: #3c4e77;
+    --structural-soft: #64749e;
+    --line: rgba(60, 78, 122, 0.16);
+    --line-strong: rgba(60, 78, 122, 0.32);
+    --muted: #566078;
+    --tag-bg: rgba(60, 78, 122, 0.08);
+    --code-bg: #ffffff;
+    --shadow: 0 1px 2px rgba(21, 26, 34, 0.04), 0 8px 24px -12px rgba(21, 26, 34, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+
+  h1, h2, h3 {
+    font-family: Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  a { color: inherit; }
+
+  /* ---- Shell ---- */
+  .page { max-width: 1040px; margin: 0 auto; padding: 0 28px 120px; }
+
+  header.hero {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 64px 28px 40px;
+  }
+  .eyebrow {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: block;
+  }
+  h1.title { font-size: clamp(32px, 4.4vw, 44px); letter-spacing: -0.01em; }
+  .subtitle {
+    max-width: 62ch;
+    color: var(--muted);
+    font-size: 17px;
+    margin-top: 14px;
+  }
+  .stackline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .chip {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12.5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: var(--tag-bg);
+    color: var(--structural);
+    border: 1px solid var(--line);
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.toc .row {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  nav.toc a {
+    text-decoration: none;
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 14px 14px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+  nav.toc a:hover { color: var(--ink); }
+
+  section { padding: 56px 0 8px; border-top: 1px solid var(--line); }
+  section:first-of-type { border-top: none; }
+
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+  .section-num {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    color: var(--structural-soft);
+  }
+  h2.section-title { font-size: 26px; }
+  .section-desc { color: var(--muted); max-width: 68ch; margin-top: 10px; margin-bottom: 34px; font-size: 15.5px; }
+
+  /* ---- Architecture diagram ---- */
+  .diagram {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 36px 28px 28px;
+    overflow-x: auto;
+  }
+  .layer-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .layer { min-width: 720px; }
+  .row { display: flex; gap: 14px; justify-content: center; flex-wrap: nowrap; }
+  .node {
+    flex: 1;
+    min-width: 140px;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+    background: var(--paper);
+  }
+  .node .name { font-weight: 600; font-size: 14px; }
+  .node .sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .node.accent { border-color: var(--accent); }
+  .node.accent .name { color: var(--accent); }
+  .node.dim { opacity: 0.82; }
+
+  .arrow-row { display: flex; justify-content: center; margin: 6px 0; }
+  .arrow { color: var(--structural-soft); font-size: 18px; line-height: 1; }
+
+  .fanout { display: flex; justify-content: center; gap: 0; }
+  .fanout .arrow { margin: 0 30px; }
+
+  .layer + .layer { margin-top: 6px; }
+
+  /* ---- Modules ---- */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  .module-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow);
+  }
+  .module-card .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .module-card h3 { font-size: 15.5px; font-family: -apple-system, "Segoe UI", sans-serif; font-weight: 650; }
+  .scope {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    padding: 3px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .scope.tenant { background: var(--tag-bg); color: var(--structural); }
+  .scope.platform { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+  .module-card p { font-size: 13.5px; color: var(--muted); margin: 8px 0 0; }
+  .module-card .path {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px;
+    color: var(--structural-soft);
+    margin-top: 10px;
+    display: block;
+  }
+
+  .group-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 30px 0 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .group-title:first-child { margin-top: 0; }
+
+  /* ---- File tree ---- */
+  .tree-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 760px) {
+    .tree-wrap.split { grid-template-columns: 1fr 1fr; }
+  }
+  .tree-panel {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .tree-panel .bar {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+  .tree-panel pre {
+    margin: 0;
+    padding: 16px 18px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12.6px;
+    line-height: 1.65;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .tree-panel pre .dir { color: var(--structural); font-weight: 600; }
+  .tree-panel pre .file { color: var(--ink); }
+  .tree-panel pre .cmt { color: var(--muted); }
+  .tree-panel pre .accentf { color: var(--accent); }
+
+  footer {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 40px 28px 60px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+  }
+
+  ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+</style>
+
+<header class="hero">
+  <span class="eyebrow">Lumio LMS · System Design</span>
+  <h1 class="title">Architecture, modules, and local project layout</h1>
+  <p class="subtitle">
+    A multi-tenant learning platform: organizations get a branded instance, students learn,
+    instructors author, and admins run their tenant. This page maps the moving parts to how
+    the codebase is actually organized.
+  </p>
+  <div class="stackline">
+    <span class="chip">Next.js + TS</span>
+    <span class="chip">MUI</span>
+    <span class="chip">NestJS + TS</span>
+    <span class="chip">PostgreSQL / Prisma</span>
+    <span class="chip">Redis + BullMQ</span>
+    <span class="chip">Stripe</span>
+    <span class="chip">Mux</span>
+    <span class="chip">GCP</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="row">
+    <a href="#architecture">01 — Architecture</a>
+    <a href="#modules">02 — Backend modules</a>
+    <a href="#frontend">03 — Frontend structure</a>
+    <a href="#tree">04 — Local project layout</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <section id="architecture">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Architecture</h2>
+    </div>
+    <p class="section-desc">
+      Every request enters through a tenant's subdomain, resolves to that org's context, and
+      is served by a single stateless API fleet — no per-tenant infrastructure. Async work
+      (email, certificates, webhooks) is offloaded to a worker fleet sharing the same Redis
+      instance, so request latency never waits on a PDF render or an outbound email.
+    </p>
+
+    <div class="diagram">
+      <div class="layer">
+        <div class="layer-label">Client</div>
+        <div class="row">
+          <div class="node accent"><div class="name">Next.js Web App</div><div class="sub">{org}.lumio.app</div></div>
+        </div>
+      </div>
+
+      <div class="arrow-row"><span class="arrow">↓</span></div>
+
+      <div class="layer">
+        <div class="layer-label">Edge — GCP</div>
+        <div class="row">
+          <div class="node"><div class="name">Cloud Load Balancer</div><div class="sub">TLS · subdomain routing</div></div>
+        </div>
+      </div>
+
+      <div class="arrow-row"><span class="arrow">↓</span></div>
+
+      <div class="layer">
+        <div class="layer-label">Application — Cloud Run</div>
+        <div class="row">
+          <div class="node accent"><div class="name">NestJS API</div><div class="sub">stateless · autoscaled</div></div>
+          <div class="node dim"><div class="name">BullMQ Workers</div><div class="sub">separate service</div></div>
+        </div>
+      </div>
+
+      <div class="arrow-row"><span class="arrow">↓</span></div>
+
+      <div class="layer">
+        <div class="layer-label">Data</div>
+        <div class="row">
+          <div class="node"><div class="name">Cloud SQL — Postgres</div><div class="sub">tenant_id-scoped rows</div></div>
+          <div class="node"><div class="name">Memorystore — Redis</div><div class="sub">cache · sessions · queues</div></div>
+          <div class="node"><div class="name">Cloud Storage (GCS)</div><div class="sub">avatars · resources</div></div>
+        </div>
+      </div>
+
+      <div class="arrow-row"><span class="arrow">↓</span></div>
+
+      <div class="layer">
+        <div class="layer-label">External services</div>
+        <div class="row">
+          <div class="node"><div class="name">Stripe</div><div class="sub">checkout · subscriptions</div></div>
+          <div class="node"><div class="name">Mux</div><div class="sub">video encode · stream</div></div>
+          <div class="node"><div class="name">SendGrid</div><div class="sub">transactional email</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="modules">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Backend modules</h2>
+    </div>
+    <p class="section-desc">
+      NestJS's module system mirrors what a modular monolith needs here — each domain owns its
+      controllers, services, and DTOs, with tenant scoping enforced centrally rather than
+      per-query. <span class="mono">tenant</span>-scoped modules read the org from the request
+      context; <span class="mono">platform</span> modules cut across all tenants.
+    </p>
+
+    <div class="group-title">Core domain</div>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="head"><h3>Tenancy</h3><span class="scope tenant">tenant</span></div>
+        <p>Org signup, branding, subdomain resolution, subscription plan, tenant suspension.</p>
+        <span class="path">src/modules/tenancy</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Auth &amp; Membership</h3><span class="scope tenant">tenant</span></div>
+        <p>JWT issue/refresh, Google OAuth, password reset, the Membership join table (user × tenant × role).</p>
+        <span class="path">src/modules/auth</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Catalog</h3><span class="scope tenant">tenant</span></div>
+        <p>Course/section/lecture CRUD, Postgres full-text search, category taxonomy, reviews.</p>
+        <span class="path">src/modules/catalog</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Commerce</h3><span class="scope tenant">tenant</span></div>
+        <p>Cart, checkout, Stripe orders, coupons, refunds, instructor payout ledger.</p>
+        <span class="path">src/modules/commerce</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Learning</h3><span class="scope tenant">tenant</span></div>
+        <p>Enrollment, progress tracking, notes, Q&amp;A threads, certificate issuance.</p>
+        <span class="path">src/modules/learning</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Instructor</h3><span class="scope tenant">tenant</span></div>
+        <p>Course authoring, curriculum tree, publish lifecycle, instructor dashboard/analytics.</p>
+        <span class="path">src/modules/instructor</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Org Admin</h3><span class="scope tenant">tenant</span></div>
+        <p>User management, course moderation, tenant analytics, branding &amp; billing settings.</p>
+        <span class="path">src/modules/org-admin</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Notifications</h3><span class="scope tenant">tenant</span></div>
+        <p>In-app + email notification preferences and delivery, fed by BullMQ jobs.</p>
+        <span class="path">src/modules/notifications</span>
+      </div>
+    </div>
+
+    <div class="group-title">Platform-wide</div>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="head"><h3>Super Admin</h3><span class="scope platform">platform</span></div>
+        <p>Tenant create/suspend, cross-tenant analytics, audited impersonation.</p>
+        <span class="path">src/modules/super-admin</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Billing (platform)</h3><span class="scope platform">platform</span></div>
+        <p>Tenant subscription plans, seat billing, Stripe webhook handling for org invoices.</p>
+        <span class="path">src/modules/platform-billing</span>
+      </div>
+    </div>
+
+    <div class="group-title">Shared infrastructure</div>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="head"><h3>Prisma / Data</h3></div>
+        <p>Prisma client, tenant-scoping middleware/extension applied to every query.</p>
+        <span class="path">src/prisma</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Common</h3></div>
+        <p>Guards (auth, roles, tenant), interceptors, exception filters, decorators.</p>
+        <span class="path">src/common</span>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>Jobs</h3></div>
+        <p>BullMQ queues + processors: email, certificate PDF render, Mux webhook intake.</p>
+        <span class="path">src/jobs</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="frontend">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Frontend structure</h2>
+    </div>
+    <p class="section-desc">
+      Next.js App Router with route groups that map directly to the audience: a public
+      marketing/catalog surface, the authenticated learner app, an instructor console, and an
+      org-admin console — each behind its own layout and role guard, sharing one MUI theme.
+    </p>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="head"><h3>(marketing)</h3></div>
+        <p>Landing, course catalog, course detail — public, tenant-branded via subdomain.</p>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>(learner)</h3></div>
+        <p>My Learning, lecture player, notes, Q&amp;A, profile &amp; settings.</p>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>(instructor)</h3></div>
+        <p>Course authoring, curriculum builder, revenue &amp; ratings dashboard.</p>
+      </div>
+      <div class="module-card">
+        <div class="head"><h3>(org-admin)</h3></div>
+        <p>User &amp; course moderation, branding, tenant analytics, billing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tree">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Local project layout</h2>
+    </div>
+    <p class="section-desc">
+      Two independent apps plus a root Compose file that wires them to local Postgres and
+      Redis — matches the folders you've already created (<span class="mono">lumio-fe</span>,
+      <span class="mono">lumio-be</span>).
+    </p>
+
+    <div class="tree-panel" style="margin-bottom: 20px;">
+      <div class="bar"><span>lumiolms/ — root</span><span>docker-compose.yml</span></div>
+      <pre><span class="dir">lumiolms/</span>
+├── docker-compose.yml        <span class="cmt"># postgres, redis, lumio-be, lumio-fe</span>
+├── docker-compose.override.yml   <span class="cmt"># local-only overrides, gitignored</span>
+├── .env.example
+├── <span class="dir">docs/</span>
+│   ├── requirements.md
+│   └── <span class="dir">design/</span>
+├── <span class="dir">lumio-be/</span>                  <span class="accentf"># NestJS API — see below</span>
+└── <span class="dir">lumio-fe/</span>                  <span class="accentf"># Next.js app — see below</span></pre>
+    </div>
+
+    <div class="tree-wrap split">
+      <div class="tree-panel">
+        <div class="bar"><span>lumio-be/</span><span class="mono">NestJS · Prisma</span></div>
+        <pre><span class="dir">lumio-be/</span>
+├── <span class="dir">prisma/</span>
+│   ├── schema.prisma
+│   └── <span class="dir">migrations/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">modules/</span>
+│   │   ├── <span class="dir">tenancy/</span>
+│   │   ├── <span class="dir">auth/</span>
+│   │   ├── <span class="dir">catalog/</span>
+│   │   ├── <span class="dir">commerce/</span>
+│   │   ├── <span class="dir">learning/</span>
+│   │   ├── <span class="dir">instructor/</span>
+│   │   ├── <span class="dir">org-admin/</span>
+│   │   ├── <span class="dir">super-admin/</span>
+│   │   ├── <span class="dir">platform-billing/</span>
+│   │   └── <span class="dir">notifications/</span>
+│   │       <span class="cmt"># each: *.module.ts, *.controller.ts,</span>
+│   │       <span class="cmt">#       *.service.ts, dto/, entities/</span>
+│   ├── <span class="dir">common/</span>
+│   │   ├── <span class="dir">guards/</span>       <span class="cmt"># jwt, roles, tenant-scope</span>
+│   │   ├── <span class="dir">interceptors/</span>
+│   │   ├── <span class="dir">filters/</span>
+│   │   └── <span class="dir">decorators/</span>
+│   ├── <span class="dir">prisma/</span>
+│   │   ├── prisma.module.ts
+│   │   └── prisma.service.ts   <span class="cmt"># tenant-scoping extension</span>
+│   ├── <span class="dir">jobs/</span>
+│   │   ├── <span class="dir">queues/</span>
+│   │   └── <span class="dir">processors/</span>  <span class="cmt"># email, pdf, mux-webhook</span>
+│   ├── <span class="dir">config/</span>
+│   ├── app.module.ts
+│   └── main.ts
+├── <span class="dir">test/</span>
+│   └── <span class="dir">tenant-isolation/</span>  <span class="cmt"># cross-tenant leak assertions</span>
+├── Dockerfile
+├── nest-cli.json
+├── tsconfig.json
+└── package.json</pre>
+      </div>
+
+      <div class="tree-panel">
+        <div class="bar"><span>lumio-fe/</span><span class="mono">Next.js · MUI</span></div>
+        <pre><span class="dir">lumio-fe/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">app/</span>
+│   │   ├── <span class="dir">(marketing)/</span>
+│   │   │   ├── <span class="dir">courses/</span>
+│   │   │   └── page.tsx
+│   │   ├── <span class="dir">(learner)/</span>
+│   │   │   ├── <span class="dir">my-learning/</span>
+│   │   │   ├── <span class="dir">learn/[courseId]/</span>
+│   │   │   └── <span class="dir">profile/</span>
+│   │   ├── <span class="dir">(instructor)/</span>
+│   │   │   └── <span class="dir">studio/</span>
+│   │   ├── <span class="dir">(org-admin)/</span>
+│   │   │   └── <span class="dir">admin/</span>
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   ├── <span class="dir">components/</span>
+│   │   ├── <span class="dir">catalog/</span>
+│   │   ├── <span class="dir">player/</span>
+│   │   └── <span class="dir">ui/</span>
+│   ├── <span class="dir">lib/</span>
+│   │   ├── api-client.ts     <span class="cmt"># typed fetch to lumio-be</span>
+│   │   └── auth.ts
+│   ├── <span class="dir">hooks/</span>
+│   ├── <span class="dir">theme/</span>
+│   │   └── muiTheme.ts
+│   └── <span class="dir">types/</span>
+├── <span class="dir">public/</span>
+├── Dockerfile
+├── next.config.ts
+├── tsconfig.json
+└── package.json</pre>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Lumio LMS — generated from <span class="mono">docs/requirements.md</span>. Backend framework
+  (NestJS) is a recommendation, not yet confirmed — flagged for sign-off before scaffolding.
+</footer>

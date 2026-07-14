@@ -1,0 +1,53 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - banner [ref=f3e3]:
+      - link "lumio" [ref=f3e4] [cursor=pointer]:
+        - /url: /dashboard
+      - navigation [ref=f3e9]:
+        - link "Dashboard" [ref=f3e10] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Browse" [ref=f3e11] [cursor=pointer]:
+          - /url: /catalog
+        - link "My Learning" [ref=f3e12] [cursor=pointer]:
+          - /url: /my-learning
+      - textbox "Search courses" [ref=f3e17]
+      - link "Cart" [ref=f3e18] [cursor=pointer]:
+        - /url: /cart
+      - button "Notifications" [ref=f3e24] [cursor=pointer]
+      - button "JL" [ref=f3e29] [cursor=pointer]
+    - generic [ref=f3e32]:
+      - generic [ref=f3e33]:
+        - heading "Browse courses" [level=1] [ref=f3e34]
+        - paragraph [ref=f3e35]: Hands-on courses in code, design, data, photography and film.
+      - generic [ref=f3e36]:
+        - complementary [ref=f3e37]:
+          - generic [ref=f3e38]:
+            - generic [ref=f3e39]: Categories
+            - button "All categories" [ref=f3e41] [cursor=pointer]
+            - generic [ref=f3e43]: Level
+            - generic [ref=f3e44]:
+              - generic [ref=f3e45] [cursor=pointer]:
+                - checkbox "Beginner" [ref=f3e46]
+                - text: Beginner
+              - generic [ref=f3e47] [cursor=pointer]:
+                - checkbox "Intermediate" [ref=f3e48]
+                - text: Intermediate
+              - generic [ref=f3e49] [cursor=pointer]:
+                - checkbox "Advanced" [ref=f3e50]
+                - text: Advanced
+              - generic [ref=f3e51] [cursor=pointer]:
+                - checkbox "All Levels" [ref=f3e52]
+                - text: All Levels
+        - generic [ref=f3e53]:
+          - generic [ref=f3e54]:
+            - textbox "Search by title, instructor or topic" [ref=f3e59]
+            - combobox [ref=f3e60] [cursor=pointer]:
+              - option "Newest" [selected]
+              - option "Highest Rated"
+              - option "Most Reviewed"
+              - 'option "Price: Low to High"'
+              - 'option "Price: High to Low"'
+          - generic [ref=f3e61]:
+            - strong [ref=f3e62]: "0"
+            - text: courses
+  - alert [ref=f3e66]

@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#4338CA">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="800" fill="#4338CA"/>
+<circle cx="600" cy="330" r="120" fill="#ffffff"/>
+<path d="M565 270 L565 390 L660 330 Z" fill="#4338CA"/>
+<text x="600" y="540" font-family="Plus Jakarta Sans, system-ui, sans-serif" font-size="92" font-weight="800" letter-spacing="-3" fill="#ffffff" text-anchor="middle">lumio</text>
+<text x="600" y="610" font-family="Manrope, system-ui, sans-serif" font-size="34" fill="#C7D2FE" text-anchor="middle">Learn by building</text>
+</svg>
+</template>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Manrope',system-ui,sans-serif;color:#0F172A;background:#F1F5F9;-webkit-font-smoothing:antialiased}
+input,button,textarea,select{font-family:inherit}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:8px;border:2px solid #fff}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;min-height:100vh;background:#F1F5F9;font-family:'Manrope',sans-serif;color:#0F172A">
+
+<!-- ============ NAVBAR ============ -->
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ false }}">
+<header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:clamp(12px,2vw,28px);padding:0 clamp(14px,3vw,32px);height:64px">
+  <div onClick="{{ goDash }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0">
+    <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6366F1,#4338CA);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(79,70,229,0.35)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="#fff"/></svg>
+    </div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1E293B">lumio</span>
+  </div>
+
+  <nav style="display:flex;align-items:center;gap:2px;flex-wrap:wrap">
+    <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
+      <button onClick="{{ n.onClick }}" style="{{ n.style }}">{{ n.label }}</button>
+    </sc-for>
+  </nav>
+
+  <div style="flex:1"></div>
+
+  <div style="position:relative;display:flex;align-items:center;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:10px;padding:0 10px;height:38px;max-width:240px;flex:1 1 120px;min-width:0">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;opacity:0.5"><circle cx="11" cy="11" r="7" stroke="#475569" stroke-width="2"/><path d="m20 20-3-3" stroke="#475569" stroke-width="2" stroke-linecap="round"/></svg>
+    <input value="{{ navSearch }}" onChange="{{ onNavSearch }}" onKeyDown="{{ onNavSearchKey }}" placeholder="Search courses" style="border:none;background:none;outline:none;font-size:14px;color:#0F172A;margin-left:8px;width:100%;min-width:0"/>
+  </div>
+
+  <div style="position:relative;flex-shrink:0">
+    <button onClick="{{ toggleMenu }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:4px 6px 4px 4px;border-radius:30px">
+      <div style="width:34px;height:34px;border-radius:50%;background:{{ user.avatarColor }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif">{{ user.initials }}</div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="opacity:0.5"><path d="m6 9 6 6 6-6" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:52px;right:0;width:230px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 16px 40px rgba(15,23,42,0.16);padding:8px;animation:fadeUp 0.16s ease">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 10px 12px">
+          <div style="width:40px;height:40px;border-radius:50%;background:{{ user.avatarColor }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif">{{ user.initials }}</div>
+          <div style="min-width:0">
+            <div style="font-weight:700;font-size:14px;color:#1E293B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ user.name }}</div>
+            <div style="font-size:12px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ user.email }}</div>
+          </div>
+        </div>
+        <div style="height:1px;background:#F1F5F9;margin:4px 0"></div>
+        <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="4">
+          <button onClick="{{ m.onClick }}" style="{{ m.style }}">
+            <span style="width:18px;text-align:center;font-size:15px;opacity:0.9">{{ m.icon }}</span>{{ m.label }}
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</header>
+</sc-if>
+
+<div style="flex:1;display:flex;flex-direction:column;min-height:0">
+
+<!-- ============ LOGIN ============ -->
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;display:flex;flex-wrap:wrap;min-height:100vh">
+  <div style="flex:1 1 440px;display:flex;align-items:center;justify-content:center;padding:clamp(32px,5vw,64px);background:#fff">
+    <div style="width:100%;max-width:380px;animation:fadeUp 0.4s ease">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:40px">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#6366F1,#4338CA);display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="#fff"/></svg></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:22px;letter-spacing:-0.5px">lumio</span>
+      </div>
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:30px;letter-spacing:-1px;margin:0 0 8px">Welcome back</h1>
+      <p style="color:#64748B;font-size:15px;margin:0 0 28px">Pick up right where you left off.</p>
+
+      <button onClick="{{ doAuth }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1px solid #E2E8F0;border-radius:11px;padding:12px;font-weight:600;font-size:15px;color:#1E293B;cursor:pointer;margin-bottom:18px" style-hover="background:#F8FAFC;border-color:#CBD5E1">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5 43.5 34.8 43.5 24c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z"/><path fill="#4CAF50" d="M24 43.5c5.4 0 10.3-2.1 14-5.4l-6.5-5.5c-2 1.5-4.6 2.4-7.5 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39 16.2 43.5 24 43.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.5 5.5c-.5.4 6.8-4.9 6.8-15.1 0-1.2-.1-2.3-.4-3.5z"/></svg>
+        Continue with Google
+      </button>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><div style="flex:1;height:1px;background:#E2E8F0"></div><span style="font-size:12px;color:#94A3B8;font-weight:600">OR</span><div style="flex:1;height:1px;background:#E2E8F0"></div></div>
+
+      <label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Email</label>
+      <input value="{{ authEmail }}" onChange="{{ onAuthEmail }}" placeholder="you@example.com" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:13px 14px;font-size:15px;outline:none;margin-bottom:16px" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><label style="font-size:13px;font-weight:600;color:#334155">Password</label><span style="font-size:13px;color:#4F46E5;font-weight:600;cursor:pointer">Forgot password?</span></div>
+      <input value="{{ authPass }}" onChange="{{ onAuthPass }}" type="password" placeholder="••••••••" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:13px 14px;font-size:15px;outline:none;margin-bottom:22px" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/>
+      <button onClick="{{ doAuth }}" style="width:100%;background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 20px rgba(79,70,229,0.3)" style-hover="background:#4338CA">Log in</button>
+      <p style="text-align:center;color:#64748B;font-size:14px;margin:24px 0 0">New to lumio? <span onClick="{{ goSignup }}" style="color:#4F46E5;font-weight:700;cursor:pointer">Create an account</span></p>
+    </div>
+  </div>
+  <div style="flex:1 1 440px;position:relative;overflow:hidden;background:linear-gradient(150deg,#4338CA,#6366F1 55%,#818CF8);display:flex;align-items:center;justify-content:center;padding:clamp(32px,5vw,72px);min-height:320px">
+    <div style="position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,0.08);top:-120px;right:-120px"></div>
+    <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,0.07);bottom:-100px;left:-80px"></div>
+    <div style="position:relative;max-width:420px;color:#fff">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);border-radius:30px;padding:6px 14px;font-size:13px;font-weight:600;margin-bottom:26px">★ Rated 4.8 by 40,000+ learners</div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(28px,3.4vw,40px);line-height:1.1;letter-spacing:-1px;margin:0 0 18px">Learn by building real projects.</h2>
+      <p style="font-size:16px;line-height:1.6;color:rgba(255,255,255,0.85);margin:0 0 32px">Hands-on courses in code, design, data, and film — taught by people who actually ship.</p>
+      <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:18px;padding:20px;backdrop-filter:blur(6px)">
+        <p style="font-size:15px;line-height:1.55;margin:0 0 14px;font-weight:500">"I went from copy-pasting tutorials to shipping my own apps in three months. The project-based path just clicks."</p>
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:#F59E0B;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">PR</div><div><div style="font-weight:700;font-size:14px">Priya R.</div><div style="font-size:12px;color:rgba(255,255,255,0.7)">Frontend Developer</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ SIGN UP ============ -->
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;flex-wrap:wrap;min-height:100vh">
+  <div style="flex:1 1 440px;display:flex;align-items:center;justify-content:center;padding:clamp(32px,5vw,64px);background:#fff">
+    <div style="width:100%;max-width:380px;animation:fadeUp 0.4s ease">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:36px">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#6366F1,#4338CA);display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="#fff"/></svg></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:22px;letter-spacing:-0.5px">lumio</span>
+      </div>
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:30px;letter-spacing:-1px;margin:0 0 8px">Create your account</h1>
+      <p style="color:#64748B;font-size:15px;margin:0 0 26px">Start learning today — it's free to join.</p>
+
+      <button onClick="{{ doAuth }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1px solid #E2E8F0;border-radius:11px;padding:12px;font-weight:600;font-size:15px;color:#1E293B;cursor:pointer;margin-bottom:18px" style-hover="background:#F8FAFC;border-color:#CBD5E1">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5 43.5 34.8 43.5 24c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z"/><path fill="#4CAF50" d="M24 43.5c5.4 0 10.3-2.1 14-5.4l-6.5-5.5c-2 1.5-4.6 2.4-7.5 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39 16.2 43.5 24 43.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.5 5.5c-.5.4 6.8-4.9 6.8-15.1 0-1.2-.1-2.3-.4-3.5z"/></svg>
+        Sign up with Google
+      </button>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><div style="flex:1;height:1px;background:#E2E8F0"></div><span style="font-size:12px;color:#94A3B8;font-weight:600">OR</span><div style="flex:1;height:1px;background:#E2E8F0"></div></div>
+
+      <label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Full name</label>
+      <input value="{{ authName }}" onChange="{{ onAuthName }}" placeholder="Alex Rivera" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:13px 14px;font-size:15px;outline:none;margin-bottom:14px" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/>
+      <label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Email</label>
+      <input value="{{ authEmail }}" onChange="{{ onAuthEmail }}" placeholder="you@example.com" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:13px 14px;font-size:15px;outline:none;margin-bottom:14px" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/>
+      <label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Password</label>
+      <input value="{{ authPass }}" onChange="{{ onAuthPass }}" type="password" placeholder="At least 8 characters" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:13px 14px;font-size:15px;outline:none;margin-bottom:20px" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/>
+      <button onClick="{{ doAuth }}" style="width:100%;background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 20px rgba(79,70,229,0.3)" style-hover="background:#4338CA">Create account</button>
+      <p style="text-align:center;color:#94A3B8;font-size:12px;margin:14px 0 0;line-height:1.5">By signing up you agree to our Terms & Privacy Policy.</p>
+      <p style="text-align:center;color:#64748B;font-size:14px;margin:18px 0 0">Already have an account? <span onClick="{{ goLogin }}" style="color:#4F46E5;font-weight:700;cursor:pointer">Log in</span></p>
+    </div>
+  </div>
+  <div style="flex:1 1 440px;position:relative;overflow:hidden;background:linear-gradient(150deg,#4338CA,#6366F1 55%,#818CF8);display:flex;align-items:center;justify-content:center;padding:clamp(32px,5vw,72px);min-height:320px">
+    <div style="position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,0.08);top:-120px;left:-120px"></div>
+    <div style="position:relative;max-width:420px;color:#fff">
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(28px,3.4vw,40px);line-height:1.1;letter-spacing:-1px;margin:0 0 26px">Everything you need to level up.</h2>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <sc-for list="{{ signupPerks }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">{{ p.icon }}</div>
+            <div><div style="font-weight:700;font-size:15px;margin-bottom:2px">{{ p.title }}</div><div style="font-size:13.5px;color:rgba(255,255,255,0.82);line-height:1.5">{{ p.desc }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:28px;margin-top:34px;padding-top:28px;border-top:1px solid rgba(255,255,255,0.18)">
+        <div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:24px">1,200+</div><div style="font-size:12.5px;color:rgba(255,255,255,0.75)">Courses</div></div>
+        <div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:24px">40k+</div><div style="font-size:12.5px;color:rgba(255,255,255,0.75)">Learners</div></div>
+        <div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:24px">4.8★</div><div style="font-size:12.5px;color:rgba(255,255,255,0.75)">Avg rating</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ DASHBOARD ============ -->
+<sc-if value="{{ isDash }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1180px;width:100%;margin:0 auto;padding:clamp(20px,3vw,40px) clamp(16px,3vw,32px);animation:fadeUp 0.35s ease">
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:28px">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:#4F46E5;letter-spacing:0.3px;margin-bottom:6px">{{ todayLabel }}</div>
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(26px,3vw,34px);letter-spacing:-1px;margin:0">Welcome back, {{ user.firstName }} 👋</h1>
+      <p style="color:#64748B;font-size:15px;margin:8px 0 0">You're on a {{ streak }}-day streak. Keep the momentum going.</p>
+    </div>
+    <button onClick="{{ goCatalog }}" style="display:inline-flex;align-items:center;gap:8px;background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:12px 20px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;box-shadow:0 8px 18px rgba(79,70,229,0.28)" style-hover="background:#4338CA">Browse courses →</button>
+  </div>
+
+  <!-- stat strip -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:34px">
+    <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:18px 20px">
+        <div style="font-size:13px;color:#64748B;font-weight:600;margin-bottom:8px">{{ s.label }}</div>
+        <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:26px;letter-spacing:-0.5px">{{ s.value }}</span><span style="font-size:13px;color:{{ s.deltaColor }};font-weight:700">{{ s.delta }}</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- continue learning -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.4px;margin:0">Continue learning</h2>
+    <span onClick="{{ goMyLearning }}" style="font-size:14px;color:#4F46E5;font-weight:700;cursor:pointer">View all</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:38px">
+    <sc-for list="{{ continueCourses }}" as="c" hint-placeholder-count="3">
+      <div onClick="{{ c.onResume }}" style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden;cursor:pointer;transition:box-shadow 0.2s,transform 0.2s" style-hover="box-shadow:0 14px 30px rgba(15,23,42,0.1);transform:translateY(-3px)">
+        <div style="height:120px;background:{{ c.gradient }};position:relative;display:flex;align-items:flex-end;padding:14px">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 15%,rgba(255,255,255,0.22),transparent 55%)"></div>
+          <span style="position:relative;background:rgba(255,255,255,0.92);color:#1E293B;font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px">{{ c.category }}</span>
+          <span style="position:absolute;top:14px;right:16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:34px;color:rgba(255,255,255,0.32);letter-spacing:-1px">{{ c.monogram }}</span>
+        </div>
+        <div style="padding:16px 18px 18px">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15.5px;line-height:1.3;margin-bottom:5px;color:#1E293B">{{ c.title }}</div>
+          <div style="font-size:13px;color:#64748B;margin-bottom:14px">Up next: {{ c.nextLecture }}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><span style="font-size:12.5px;font-weight:700;color:#4F46E5">{{ c.progress }}% complete</span><span style="font-size:12px;color:#94A3B8">{{ c.remainLabel }}</span></div>
+          <div style="height:7px;background:#EEF2FF;border-radius:10px;overflow:hidden"><div style="height:100%;width:{{ c.progressPct }};background:linear-gradient(90deg,#6366F1,#4338CA);border-radius:10px"></div></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- two column: recommended + activity -->
+  <div style="display:flex;flex-wrap:wrap;gap:26px">
+    <div style="flex:1 1 520px;min-width:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.4px;margin:0">Recommended for you</h2>
+        <span onClick="{{ goCatalog }}" style="font-size:14px;color:#4F46E5;font-weight:700;cursor:pointer">See all</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+        <sc-for list="{{ recommended }}" as="c" hint-placeholder-count="4">
+          <div onClick="{{ c.onOpen }}" style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;overflow:hidden;cursor:pointer;transition:box-shadow 0.2s,transform 0.2s" style-hover="box-shadow:0 12px 26px rgba(15,23,42,0.1);transform:translateY(-3px)">
+            <div style="height:96px;background:{{ c.gradient }};position:relative;display:flex;align-items:flex-end;padding:10px">
+              <div style="position:absolute;inset:0;background:radial-gradient(circle at 78% 18%,rgba(255,255,255,0.22),transparent 55%)"></div>
+              <span style="position:absolute;top:10px;left:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:26px;color:rgba(255,255,255,0.34)">{{ c.monogram }}</span>
+            </div>
+            <div style="padding:12px 14px 15px">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;line-height:1.3;margin-bottom:4px;color:#1E293B">{{ c.title }}</div>
+              <div style="font-size:12.5px;color:#64748B;margin-bottom:9px">{{ c.instructor }}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;font-weight:700"><span style="color:#F59E0B">★</span> {{ c.rating }}</span><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:#1E293B">{{ c.priceLabel }}</span></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex:1 1 280px;min-width:0">
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.4px;margin:0 0 16px">Recent activity</h2>
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:6px 18px">
+        <sc-for list="{{ activity }}" as="a" hint-placeholder-count="4">
+          <div style="display:flex;gap:13px;padding:14px 0;border-bottom:1px solid #F1F5F9">
+            <div style="width:34px;height:34px;border-radius:10px;background:{{ a.bg }};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px">{{ a.icon }}</div>
+            <div style="min-width:0"><div style="font-size:13.5px;color:#1E293B;line-height:1.4">{{ a.text }}</div><div style="font-size:12px;color:#94A3B8;margin-top:3px">{{ a.time }}</div></div>
+          </div>
+        </sc-for>
+        <div style="padding:14px 0;text-align:center"><span style="font-size:13px;color:#94A3B8">That's everything from this week</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ CATALOG ============ -->
+<sc-if value="{{ isCatalog }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1180px;width:100%;margin:0 auto;padding:clamp(20px,3vw,40px) clamp(16px,3vw,32px);animation:fadeUp 0.35s ease">
+  <div style="margin-bottom:26px">
+    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(26px,3vw,34px);letter-spacing:-1px;margin:0 0 6px">Browse courses</h1>
+    <p style="color:#64748B;font-size:15px;margin:0">Hands-on courses in code, design, data, photography and film.</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+    <!-- sidebar -->
+    <aside style="flex:0 0 230px;position:sticky;top:84px">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:18px">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:#94A3B8;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Categories</div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="7">
+            <button onClick="{{ cat.onClick }}" style="{{ cat.btnStyle }}">
+              <span>{{ cat.name }}</span><span style="{{ cat.countStyle }}">{{ cat.count }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="height:1px;background:#F1F5F9;margin:16px 0"></div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:#94A3B8;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Level</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ levelFilters }}" as="lv" hint-placeholder-count="3">
+            <label style="display:flex;align-items:center;gap:9px;font-size:14px;color:#475569;cursor:pointer"><span style="width:17px;height:17px;border:1.5px solid #CBD5E1;border-radius:5px;display:inline-block"></span>{{ lv }}</label>
+          </sc-for>
+        </div>
+      </div>
+    </aside>
+    <!-- main -->
+    <div style="flex:1 1 560px;min-width:0">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px">
+        <div style="flex:1 1 240px;display:flex;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:11px;padding:0 14px;height:46px;min-width:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0.45;flex-shrink:0"><circle cx="11" cy="11" r="7" stroke="#475569" stroke-width="2"/><path d="m20 20-3-3" stroke="#475569" stroke-width="2" stroke-linecap="round"/></svg>
+          <input value="{{ catSearch }}" onChange="{{ onCatSearch }}" placeholder="Search by title, instructor or topic" style="border:none;outline:none;background:none;font-size:14.5px;margin-left:10px;width:100%;min-width:0"/>
+        </div>
+        <select value="{{ catSort }}" onChange="{{ onCatSort }}" style="height:46px;border:1px solid #E2E8F0;border-radius:11px;padding:0 14px;font-size:14px;font-weight:600;color:#334155;background:#fff;cursor:pointer">
+          <sc-for list="{{ sortOptions }}" as="o" hint-placeholder-count="5"><option value="{{ o }}">{{ o }}</option></sc-for>
+        </select>
+      </div>
+      <div style="font-size:14px;color:#64748B;margin-bottom:16px"><strong style="color:#1E293B">{{ catCount }}</strong> courses{{ catLabelSuffix }}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px">
+        <sc-for list="{{ catalogCourses }}" as="c" hint-placeholder-count="6">
+          <div onClick="{{ c.onOpen }}" style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow 0.2s,transform 0.2s" style-hover="box-shadow:0 14px 30px rgba(15,23,42,0.1);transform:translateY(-3px)">
+            <div style="height:128px;background:{{ c.gradient }};position:relative;display:flex;align-items:flex-end;padding:12px">
+              <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 16%,rgba(255,255,255,0.24),transparent 55%)"></div>
+              <span style="position:absolute;top:12px;left:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:30px;color:rgba(255,255,255,0.34);letter-spacing:-1px">{{ c.monogram }}</span>
+              <sc-if value="{{ c.bestseller }}" hint-placeholder-val="{{ false }}"><span style="position:relative;background:#FCD34D;color:#78350F;font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:0.3px">BESTSELLER</span></sc-if>
+            </div>
+            <div style="padding:14px 16px 16px;display:flex;flex-direction:column;flex:1">
+              <span style="font-size:11.5px;font-weight:700;color:#4F46E5;margin-bottom:6px">{{ c.category }}</span>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15.5px;line-height:1.3;margin-bottom:5px;color:#1E293B">{{ c.title }}</div>
+              <div style="font-size:13px;color:#64748B;margin-bottom:10px">{{ c.instructor }}</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px"><span style="font-weight:800;font-size:13.5px;color:#B45309">{{ c.rating }}</span><span style="color:#F59E0B;font-size:13px">★★★★★</span><span style="font-size:12.5px;color:#94A3B8">({{ c.reviewsLabel }})</span></div>
+              <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:baseline;gap:7px"><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;color:#1E293B">{{ c.priceLabel }}</span><span style="font-size:12.5px;color:#94A3B8;text-decoration:line-through">{{ c.origLabel }}</span></div>
+                <span style="font-size:12px;color:#94A3B8">{{ c.hours }}h</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:60px 20px;color:#94A3B8"><div style="font-size:40px;margin-bottom:12px">🔍</div><div style="font-weight:700;color:#475569;font-size:16px;margin-bottom:6px">No courses match your filters</div><button onClick="{{ clearFilters }}" style="margin-top:10px;background:#EEF2FF;color:#4F46E5;border:none;border-radius:9px;padding:9px 16px;font-weight:700;cursor:pointer">Clear filters</button></div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ COURSE DETAIL ============ -->
+<sc-if value="{{ isCourse }}" hint-placeholder-val="{{ false }}">
+<div style="animation:fadeUp 0.35s ease">
+  <!-- hero band -->
+  <div style="background:linear-gradient(135deg,#1E1B4B,#312E81 60%,#4338CA);color:#fff;padding:clamp(28px,4vw,52px) clamp(16px,3vw,32px)">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:18px">
+        <span onClick="{{ backToCatalog }}" style="cursor:pointer;font-weight:600" style-hover="color:#fff">Browse</span><span>/</span><span style="color:rgba(255,255,255,0.85)">{{ cur.cat }}</span>
+      </div>
+      <div style="max-width:720px">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(28px,3.6vw,40px);line-height:1.12;letter-spacing:-1px;margin:0 0 14px">{{ cur.title }}</h1>
+        <p style="font-size:17px;line-height:1.55;color:rgba(255,255,255,0.85);margin:0 0 20px">{{ cur.short }}</p>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:14px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="font-weight:800;color:#FCD34D">{{ cur.rating }}</span><span style="color:#FCD34D">★★★★★</span><span style="color:rgba(255,255,255,0.7)">({{ cur.reviewsLabel }} ratings)</span></span>
+          <span style="color:rgba(255,255,255,0.75)">{{ cur.studentsLabel }} students</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border-radius:20px;padding:4px 11px;font-weight:600;font-size:12.5px">{{ cur.level }}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:11px;margin-top:20px">
+          <div style="width:42px;height:42px;border-radius:50%;background:{{ cur.instructorInfo.color }};display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px">{{ cur.instructorInitials }}</div>
+          <div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Created by</div><div style="font-weight:700;font-size:15px">{{ cur.inst }}</div></div>
+          <div style="margin-left:8px;font-size:13px;color:rgba(255,255,255,0.65)">· {{ cur.updated }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- body -->
+  <div style="max-width:1180px;margin:0 auto;padding:clamp(24px,3vw,40px) clamp(16px,3vw,32px);display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start">
+    <div style="flex:1 1 540px;min-width:0">
+      <!-- what you'll learn -->
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:24px clamp(18px,2.5vw,28px);margin-bottom:30px">
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.4px;margin:0 0 18px">What you'll learn</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:13px 24px">
+          <sc-for list="{{ cur.whatYouLearn }}" as="w" hint-placeholder-count="6">
+            <div style="display:flex;gap:11px;align-items:flex-start"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><path d="m5 13 4 4L19 7" stroke="#4F46E5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:14.5px;line-height:1.45;color:#334155">{{ w }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- curriculum -->
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px">
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.4px;margin:0">Course content</h2>
+        <span style="font-size:13.5px;color:#64748B">{{ cur.curriculum.length }} sections · {{ curLecturesLabel }} · {{ cur.hours }}h</span>
+      </div>
+      <div style="border:1px solid #E2E8F0;border-radius:14px;overflow:hidden;margin-bottom:30px;background:#fff">
+        <sc-for list="{{ curriculumView }}" as="sec" hint-placeholder-count="5">
+          <div style="border-bottom:1px solid #F1F5F9">
+            <button onClick="{{ sec.onToggle }}" style="width:100%;display:flex;align-items:center;gap:12px;background:#F8FAFC;border:none;padding:15px 18px;cursor:pointer;text-align:left">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="{{ sec.chevStyle }}"><path d="m6 9 6 6 6-6" stroke="#1E293B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1E293B;flex:1">{{ sec.title }}</span>
+              <span style="font-size:13px;color:#64748B;flex-shrink:0">{{ sec.meta }}</span>
+            </button>
+            <sc-if value="{{ sec.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:4px 0">
+                <sc-for list="{{ sec.lectures }}" as="lec" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:12px;padding:11px 18px 11px 22px">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;opacity:0.55"><circle cx="12" cy="12" r="9" stroke="#475569" stroke-width="1.6"/><path d="M10 8.5v7l5-3.5-5-3.5z" fill="#475569"/></svg>
+                    <span style="flex:1;font-size:14px;color:#334155">{{ lec.title }}</span>
+                    <sc-if value="{{ lec.preview }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:700;color:#4F46E5">Preview</span></sc-if>
+                    <span style="font-size:13px;color:#94A3B8;flex-shrink:0">{{ lec.duration }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- description -->
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.4px;margin:0 0 12px">Description</h2>
+      <p style="font-size:15.5px;line-height:1.7;color:#475569;margin:0 0 30px">{{ cur.longDesc }}</p>
+
+      <!-- instructor -->
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.4px;margin:0 0 16px">Your instructor</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;margin-bottom:34px">
+        <div style="width:78px;height:78px;border-radius:50%;background:{{ cur.instructorInfo.color }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:28px;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0">{{ cur.instructorInitials }}</div>
+        <div style="flex:1 1 320px;min-width:0">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px">{{ cur.inst }}</div>
+          <div style="font-size:14px;color:#4F46E5;font-weight:600;margin-bottom:10px">{{ cur.instructorInfo.title }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:13.5px;color:#64748B;margin-bottom:12px">
+            <span><span style="color:#F59E0B">★</span> {{ cur.instructorInfo.rating }} rating</span>
+            <span>{{ cur.instructorInfo.students }} students</span>
+            <span>{{ cur.instructorInfo.courses }} courses</span>
+          </div>
+          <p style="font-size:14.5px;line-height:1.65;color:#475569;margin:0">{{ cur.instructorInfo.bio }}</p>
+        </div>
+      </div>
+
+      <!-- reviews -->
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.4px;margin:0 0 18px">Student reviews</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:30px;align-items:center;margin-bottom:26px">
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:54px;line-height:1;color:#1E293B">{{ cur.rating }}</div>
+          <div style="color:#F59E0B;font-size:18px;margin:6px 0 4px">★★★★★</div>
+          <div style="font-size:13px;color:#64748B">{{ cur.reviewsLabel }} ratings</div>
+        </div>
+        <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ ratingBars }}" as="r" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;color:#94A3B8;width:42px;flex-shrink:0">{{ r.stars }} star</span><div style="flex:1;height:8px;background:#F1F5F9;border-radius:8px;overflow:hidden"><div style="height:100%;width:{{ r.pct }};background:#F59E0B;border-radius:8px"></div></div><span style="font-size:12.5px;color:#94A3B8;width:38px;text-align:right;flex-shrink:0">{{ r.pctLabel }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+        <sc-for list="{{ cur.reviewList }}" as="rv" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:18px">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:10px">
+              <div style="width:38px;height:38px;border-radius:50%;background:{{ rv.color }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif">{{ rv.initials }}</div>
+              <div><div style="font-weight:700;font-size:14px;color:#1E293B">{{ rv.name }}</div><div style="font-size:12px;color:#94A3B8">{{ rv.ago }}</div></div>
+            </div>
+            <div style="color:#F59E0B;font-size:13px;margin-bottom:8px">★★★★★</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14.5px;margin-bottom:5px;color:#1E293B">{{ rv.title }}</div>
+            <p style="font-size:14px;line-height:1.6;color:#475569;margin:0">{{ rv.text }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- sticky purchase card -->
+    <aside style="flex:0 0 340px;position:sticky;top:84px">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(15,23,42,0.1)">
+        <div style="height:170px;background:{{ cur.gradient }};position:relative;display:flex;align-items:center;justify-content:center">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 75% 20%,rgba(255,255,255,0.24),transparent 55%)"></div>
+          <div style="position:relative;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,0.2)"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="#4338CA"/></svg></div>
+          <span style="position:absolute;bottom:12px;left:16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:32px;color:rgba(255,255,255,0.3)">{{ cur.monogram }}</span>
+        </div>
+        <div style="padding:22px">
+          <sc-if value="{{ curEnrolled }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:7px"><span style="color:#16A34A">You're enrolled</span><span style="color:#4F46E5">{{ curProgress }}%</span></div>
+              <div style="height:8px;background:#EEF2FF;border-radius:8px;overflow:hidden"><div style="height:100%;width:{{ curProgressPct }};background:linear-gradient(90deg,#6366F1,#4338CA);border-radius:8px"></div></div>
+            </div>
+            <button onClick="{{ onResumeCur }}" style="width:100%;background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15.5px;cursor:pointer;box-shadow:0 8px 20px rgba(79,70,229,0.3)" style-hover="background:#4338CA">Resume learning →</button>
+          </sc-if>
+          <sc-if value="{{ curNotEnrolled }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px"><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:32px;letter-spacing:-1px">{{ cur.priceLabel }}</span><span style="font-size:16px;color:#94A3B8;text-decoration:line-through">{{ cur.origLabel }}</span></div>
+            <div style="font-size:13px;color:#DC2626;font-weight:700;margin-bottom:16px">⏰ Sale ends in 2 days</div>
+            <button onClick="{{ onEnroll }}" style="width:100%;background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15.5px;cursor:pointer;box-shadow:0 8px 20px rgba(79,70,229,0.3);margin-bottom:10px" style-hover="background:#4338CA">Enroll now</button>
+            <button onClick="{{ onEnroll }}" style="width:100%;background:#fff;color:#4F46E5;border:1.5px solid #C7D2FE;border-radius:11px;padding:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer" style-hover="background:#EEF2FF">Add to cart</button>
+            <div style="text-align:center;font-size:12.5px;color:#94A3B8;margin-top:12px">30-day money-back guarantee</div>
+          </sc-if>
+          <div style="height:1px;background:#F1F5F9;margin:18px 0"></div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13.5px;margin-bottom:12px;color:#1E293B">This course includes</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <sc-for list="{{ curIncludes }}" as="inc" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:11px;font-size:13.5px;color:#475569"><span style="font-size:15px;width:18px;text-align:center">{{ inc.icon }}</span>{{ inc.label }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- related -->
+  <div style="max-width:1180px;margin:0 auto;padding:0 clamp(16px,3vw,32px) 48px">
+    <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.4px;margin:0 0 16px">Students also bought</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px">
+      <sc-for list="{{ relatedCourses }}" as="c" hint-placeholder-count="3">
+        <div onClick="{{ c.onOpen }}" style="background:#fff;border:1px solid #E2E8F0;border-radius:16px;overflow:hidden;cursor:pointer;transition:box-shadow 0.2s,transform 0.2s" style-hover="box-shadow:0 14px 30px rgba(15,23,42,0.1);transform:translateY(-3px)">
+          <div style="height:104px;background:{{ c.gradient }};position:relative;display:flex;align-items:flex-end;padding:10px"><div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 16%,rgba(255,255,255,0.22),transparent 55%)"></div><span style="position:absolute;top:10px;left:13px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:26px;color:rgba(255,255,255,0.34)">{{ c.monogram }}</span></div>
+          <div style="padding:13px 15px 16px"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14.5px;line-height:1.3;margin-bottom:4px;color:#1E293B">{{ c.title }}</div><div style="font-size:12.5px;color:#64748B;margin-bottom:9px">{{ c.instructor }}</div><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;font-weight:700"><span style="color:#F59E0B">★</span> {{ c.rating }}</span><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px">{{ c.priceLabel }}</span></div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ COURSE PLAYER ============ -->
+<sc-if value="{{ isPlayer }}" hint-placeholder-val="{{ false }}">
+<div style="animation:fadeUp 0.3s ease">
+  <!-- player top bar -->
+  <div style="background:#0F172A;color:#fff;display:flex;align-items:center;gap:14px;padding:11px clamp(14px,3vw,28px)">
+    <button onClick="{{ backToCourse }}" style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.08);border:none;color:#fff;border-radius:9px;padding:8px 13px;font-size:13.5px;font-weight:600;cursor:pointer" style-hover="background:rgba(255,255,255,0.16)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Course</button>
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pc.title }}</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <span style="font-size:13px;color:rgba(255,255,255,0.75)"><strong style="color:#fff">{{ pPctLabel }}</strong> complete</span>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:stretch">
+    <!-- video + content -->
+    <div style="flex:1 1 600px;min-width:0;background:#fff">
+      <!-- video -->
+      <div style="aspect-ratio:16/9;background:linear-gradient(135deg,#1E1B4B,#312E81 55%,#4338CA);position:relative;display:flex;align-items:center;justify-content:center">
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(255,255,255,0.16),transparent 55%)"></div>
+        <div style="position:relative;text-align:center;color:#fff">
+          <div style="width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.3)"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="#4338CA"/></svg></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.7);font-weight:600;letter-spacing:0.3px">{{ curLecSection }}</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:20px;margin-top:4px;max-width:480px;padding:0 20px">{{ curLec.title }}</div>
+        </div>
+        <!-- fake controls -->
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,0.5))">
+          <div style="height:5px;background:rgba(255,255,255,0.25);border-radius:6px;margin-bottom:12px;overflow:hidden"><div style="height:100%;width:34%;background:#fff;border-radius:6px"></div></div>
+          <div style="display:flex;align-items:center;gap:16px;color:#fff">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="#fff"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5zM16 9a3 3 0 0 1 0 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-size:12.5px;color:rgba(255,255,255,0.85)">2:51 / {{ curLec.duration }}</span>
+            <div style="flex:1"></div>
+            <span style="font-size:12.5px;color:rgba(255,255,255,0.85)">1.0×</span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- lecture meta + actions -->
+      <div style="padding:22px clamp(16px,2.5vw,30px);border-bottom:1px solid #E2E8F0">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+          <div style="min-width:0">
+            <div style="font-size:12.5px;font-weight:700;color:#4F46E5;margin-bottom:4px">LECTURE {{ curLecNum }} · {{ curLecSection }}</div>
+            <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(20px,2.4vw,26px);letter-spacing:-0.5px;margin:0">{{ curLec.title }}</h1>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+            <button onClick="{{ prevLecture }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;font-weight:600;font-size:13.5px;color:#475569;cursor:pointer" style-hover="background:#F8FAFC"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev</button>
+            <button onClick="{{ nextLecture }}" style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;font-weight:600;font-size:13.5px;color:#475569;cursor:pointer" style-hover="background:#F8FAFC">Next<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="m9 18 6-6-6-6" stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <sc-if value="{{ curNotDone }}" hint-placeholder-val="{{ true }}"><button onClick="{{ markComplete }}" style="display:flex;align-items:center;gap:7px;background:#4F46E5;color:#fff;border:none;border-radius:10px;padding:11px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer" style-hover="background:#4338CA"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Mark complete</button></sc-if>
+            <sc-if value="{{ curDone }}" hint-placeholder-val="{{ false }}"><button onClick="{{ markComplete }}" style="display:flex;align-items:center;gap:7px;background:#DCFCE7;color:#15803D;border:none;border-radius:10px;padding:11px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#15803D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Completed</button></sc-if>
+          </div>
+        </div>
+      </div>
+
+      <!-- tabs -->
+      <div style="padding:0 clamp(16px,2.5vw,30px);border-bottom:1px solid #E2E8F0;display:flex">
+        <sc-for list="{{ playerTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+      </div>
+
+      <div style="padding:24px clamp(16px,2.5vw,30px) 40px">
+        <sc-if value="{{ isOverviewTab }}" hint-placeholder-val="{{ true }}">
+          <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:17px;margin:0 0 10px">About this lecture</h3>
+          <p style="font-size:15px;line-height:1.7;color:#475569;margin:0 0 22px;max-width:680px">In this lesson we work through {{ curLec.title }} step by step. Follow along with the project files, pause whenever you need to, and don't worry about getting everything perfect on the first pass — repetition is where it sticks.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:9px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:11px;padding:11px 15px;font-size:13.5px;color:#334155"><span>📎</span>Exercise files</div>
+            <div style="display:flex;align-items:center;gap:9px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:11px;padding:11px 15px;font-size:13.5px;color:#334155"><span>📝</span>Lecture transcript</div>
+            <div style="display:flex;align-items:center;gap:9px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:11px;padding:11px 15px;font-size:13.5px;color:#334155"><span>💾</span>Source code</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isNotesTab }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:680px">
+            <textarea value="{{ noteText }}" onChange="{{ onNoteText }}" placeholder="Type a note at the current timestamp..." style="width:100%;min-height:110px;border:1px solid #E2E8F0;border-radius:12px;padding:14px;font-size:14.5px;font-family:'Manrope',sans-serif;resize:vertical;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"></textarea>
+            <div style="display:flex;justify-content:flex-end;margin:10px 0 24px"><button style="background:#4F46E5;color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:13.5px;cursor:pointer">Save note</button></div>
+            <div style="background:#fff;border:1px solid #E2E8F0;border-left:3px solid #4F46E5;border-radius:10px;padding:14px 16px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="background:#EEF2FF;color:#4338CA;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px">04:12</span><span style="font-size:12.5px;color:#94A3B8">{{ curLec.title }}</span></div>
+              <p style="font-size:14px;color:#475569;margin:0;line-height:1.6">Remember to commit before refactoring — saved me here.</p>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isQaTab }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:720px">
+            <div style="display:flex;gap:10px;margin-bottom:24px"><input placeholder="Ask a question about this lecture..." style="flex:1;border:1px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/><button style="background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:0 20px;font-weight:700;font-size:14px;cursor:pointer">Ask</button></div>
+            <sc-for list="{{ qaList }}" as="q" hint-placeholder-count="2">
+              <div style="border-bottom:1px solid #F1F5F9;padding:18px 0">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px"><div style="width:34px;height:34px;border-radius:50%;background:{{ q.color }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif">{{ q.initials }}</div><div><div style="font-weight:700;font-size:14px;color:#1E293B">{{ q.name }}</div><div style="font-size:12px;color:#94A3B8">{{ q.ago }}</div></div></div>
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1E293B;margin-bottom:10px">{{ q.q }}</div>
+                <div style="display:flex;gap:10px;background:#F8FAFC;border-radius:11px;padding:12px 14px"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#4338CA);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">IN</div><div><div style="font-size:12.5px;font-weight:700;color:#4338CA;margin-bottom:3px">Instructor</div><p style="font-size:14px;color:#475569;margin:0;line-height:1.55">{{ q.a }}</p></div></div>
+                <div style="font-size:12.5px;color:#94A3B8;margin-top:9px">{{ q.answers }} replies</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- curriculum sidebar -->
+    <aside style="flex:1 1 340px;max-width:400px;border-left:1px solid #E2E8F0;background:#fff">
+      <div style="padding:18px 18px 14px;border-bottom:1px solid #E2E8F0;position:sticky;top:0;background:#fff;z-index:2">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;margin-bottom:10px">Course content</div>
+        <div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:8px;background:#EEF2FF;border-radius:8px;overflow:hidden"><div style="height:100%;width:{{ pPctLabel }};background:linear-gradient(90deg,#6366F1,#4338CA);border-radius:8px"></div></div><span style="font-size:12.5px;font-weight:700;color:#4F46E5;flex-shrink:0">{{ pCompletedCount }}/{{ pTotal }}</span></div>
+      </div>
+      <div>
+        <sc-for list="{{ playerSections }}" as="sec" hint-placeholder-count="5">
+          <div>
+            <div style="padding:14px 16px 10px;background:#F8FAFC;border-bottom:1px solid #F1F5F9"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13.5px;color:#1E293B">{{ sec.title }}</div><div style="font-size:12px;color:#94A3B8;margin-top:2px">{{ sec.meta }}</div></div>
+            <sc-for list="{{ sec.lectures }}" as="lec" hint-placeholder-count="4">
+              <div onClick="{{ lec.onClick }}" style="{{ lec.rowStyle }}">
+                <span style="{{ lec.numStyle }}"><sc-if value="{{ lec.done }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if></span>
+                <span style="{{ lec.titleStyle }}">{{ lec.title }}</span>
+                <span style="font-size:12px;color:#94A3B8;flex-shrink:0">{{ lec.duration }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </aside>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ MY LEARNING ============ -->
+<sc-if value="{{ isMyLearning }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1100px;width:100%;margin:0 auto;padding:clamp(20px,3vw,40px) clamp(16px,3vw,32px);animation:fadeUp 0.35s ease">
+  <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(26px,3vw,34px);letter-spacing:-1px;margin:0 0 6px">My Learning</h1>
+  <p style="color:#64748B;font-size:15px;margin:0 0 24px">{{ mlTotal }} courses · {{ mlInProgress }} in progress · {{ mlCompleted }} completed</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+    <sc-for list="{{ mlTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <sc-for list="{{ myLearning }}" as="c" hint-placeholder-count="3">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:16px;display:flex;flex-wrap:wrap;gap:18px;align-items:center">
+        <div style="width:150px;height:90px;border-radius:12px;background:{{ c.gradient }};position:relative;flex-shrink:0;display:flex;align-items:flex-end;padding:10px;overflow:hidden"><div style="position:absolute;inset:0;background:radial-gradient(circle at 78% 18%,rgba(255,255,255,0.24),transparent 55%)"></div><span style="position:absolute;top:8px;left:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:24px;color:rgba(255,255,255,0.34)">{{ c.monogram }}</span></div>
+        <div style="flex:1 1 280px;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:#4F46E5;margin-bottom:3px">{{ c.category }}</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16.5px;color:#1E293B;margin-bottom:3px">{{ c.title }}</div>
+          <div style="font-size:13px;color:#64748B;margin-bottom:12px">{{ c.instructor }} · {{ c.completedLabel }}</div>
+          <div style="display:flex;align-items:center;gap:12px;max-width:420px"><div style="flex:1;height:8px;background:#EEF2FF;border-radius:8px;overflow:hidden"><div style="height:100%;width:{{ c.progressPct }};background:linear-gradient(90deg,#6366F1,#4338CA);border-radius:8px"></div></div><span style="font-size:12.5px;font-weight:700;color:#4F46E5;flex-shrink:0">{{ c.progress }}%</span></div>
+        </div>
+        <div style="flex-shrink:0">
+          <button onClick="{{ c.onResume }}" style="{{ c.btnStyle }}" style-hover="filter:brightness(0.96)">{{ c.btnLabel }}</button>
+        </div>
+      </div>
+    </sc-for>
+    <sc-if value="{{ mlEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:70px 20px;background:#fff;border:1px dashed #CBD5E1;border-radius:18px"><div style="font-size:40px;margin-bottom:12px">📚</div><div style="font-weight:700;color:#475569;font-size:17px;margin-bottom:6px">Nothing here yet</div><div style="color:#94A3B8;font-size:14px;margin-bottom:16px">Courses you enroll in will show up here.</div><button onClick="{{ goCatalog }}" style="background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:12px 22px;font-weight:700;cursor:pointer">Browse courses</button></div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ PROFILE / SETTINGS ============ -->
+<sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:840px;width:100%;margin:0 auto;padding:clamp(20px,3vw,40px) clamp(16px,3vw,32px);animation:fadeUp 0.35s ease">
+  <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(26px,3vw,34px);letter-spacing:-1px;margin:0 0 26px">Profile & Settings</h1>
+
+  <!-- identity card -->
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:24px;margin-bottom:22px;display:flex;flex-wrap:wrap;gap:22px;align-items:center">
+    <div style="width:84px;height:84px;border-radius:50%;background:{{ user.avatarColor }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:32px;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0">{{ profileInitials }}</div>
+    <div style="flex:1 1 240px;min-width:0">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px">{{ user.name }}</div>
+      <div style="font-size:14px;color:#64748B;margin-bottom:12px">{{ user.email }}</div>
+      <div style="font-size:12.5px;font-weight:700;color:#94A3B8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px">Avatar color</div>
+      <div style="display:flex;gap:12px">
+        <sc-for list="{{ avatarOptions }}" as="a" hint-placeholder-count="6"><div onClick="{{ a.onClick }}" style="{{ a.activeStyle }}"></div></sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- account details -->
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:24px;margin-bottom:22px">
+    <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;margin:0 0 18px">Account details</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+      <div><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Full name</label><input value="{{ user.name }}" onChange="{{ onUserName }}" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/></div>
+      <div><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Email address</label><input value="{{ user.email }}" onChange="{{ onUserEmail }}" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/></div>
+    </div>
+    <div style="margin-top:18px"><button style="background:#4F46E5;color:#fff;border:none;border-radius:11px;padding:11px 22px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer" style-hover="background:#4338CA">Save changes</button></div>
+  </div>
+
+  <!-- password -->
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:24px;margin-bottom:22px">
+    <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;margin:0 0 18px">Change password</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:560px">
+      <div style="grid-column:1/-1"><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Current password</label><input type="password" placeholder="••••••••" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/></div>
+      <div><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">New password</label><input type="password" placeholder="••••••••" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/></div>
+      <div><label style="display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px">Confirm new password</label><input type="password" placeholder="••••••••" style="width:100%;border:1px solid #E2E8F0;border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none" style-focus="border-color:#4F46E5;box-shadow:0 0 0 3px #EEF2FF"/></div>
+    </div>
+    <div style="margin-top:18px"><button style="background:#fff;color:#4F46E5;border:1.5px solid #C7D2FE;border-radius:11px;padding:11px 22px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer" style-hover="background:#EEF2FF">Update password</button></div>
+  </div>
+
+  <!-- notifications -->
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:24px;margin-bottom:22px">
+    <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;margin:0 0 6px">Notification preferences</h2>
+    <p style="font-size:13.5px;color:#94A3B8;margin:0 0 14px">Choose what lumio emails and notifies you about.</p>
+    <sc-for list="{{ notify }}" as="n" hint-placeholder-count="5">
+      <div style="display:flex;align-items:center;gap:16px;padding:15px 0;border-top:1px solid #F1F5F9">
+        <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14.5px;color:#1E293B">{{ n.label }}</div><div style="font-size:13px;color:#64748B;margin-top:2px">{{ n.desc }}</div></div>
+        <div onClick="{{ n.onToggle }}" style="{{ n.trackStyle }}"><div style="{{ n.knobStyle }}"></div></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- danger / logout -->
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:18px;padding:20px 24px">
+    <div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#1E293B">Sign out of lumio</div><div style="font-size:13px;color:#94A3B8">You can always log back in to pick up where you left off.</div></div>
+    <button onClick="{{ logout }}" style="background:#FEE2E2;color:#B91C1C;border:none;border-radius:11px;padding:11px 22px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer" style-hover="background:#FECACA">Log out</button>
+  </div>
+</div>
+</sc-if>
+
+<!--ROUTES-->
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;760px&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.GRAD = {
+      webdev:'linear-gradient(135deg,#6366F1,#4338CA)',
+      design:'linear-gradient(135deg,#EC4899,#F97316)',
+      data:'linear-gradient(135deg,#0EA5A4,#0369A1)',
+      photo:'linear-gradient(135deg,#F59E0B,#EF4444)',
+      video:'linear-gradient(135deg,#8B5CF6,#D946EF)',
+      illus:'linear-gradient(135deg,#10B981,#84CC16)'
+    };
+    this.INSTR = {
+      'Sarah Chen':{title:'Senior Engineer & Educator',color:'#4F46E5',students:'420,000',courses:8,rating:4.8,bio:'Ex-Stripe engineer who has taught over 400,000 students to build for the web. Obsessed with fundamentals that actually stick.'},
+      'Marcus Webb':{title:'Product Designer, ex-Figma',color:'#EC4899',students:'215,000',courses:5,rating:4.9,bio:'Product designer with a decade shipping consumer apps. Believes great design is mostly clear thinking made visible.'},
+      'Dr. Aisha Rahman':{title:'Data Scientist & Author',color:'#0EA5A4',students:'180,000',courses:6,rating:4.7,bio:'PhD in statistics, author, and practicing data scientist. Makes intimidating math feel approachable and useful.'},
+      'Leo Martins':{title:'Filmmaker & Colorist',color:'#8B5CF6',students:'96,000',courses:4,rating:4.7,bio:'Award-winning filmmaker and colorist. Has graded commercials for brands you know and loves teaching the craft.'},
+      'Nina Köhler':{title:'Award-winning Photographer',color:'#F59E0B',students:'132,000',courses:5,rating:4.9,bio:'Editorial and portrait photographer published in major magazines. Teaches you to see light before you touch a camera.'},
+      'Yuki Tanaka':{title:'Illustrator & Art Director',color:'#10B981',students:'88,000',courses:3,rating:4.8,bio:'Illustrator and art director for games and publishing. Helps artists find a style that is unmistakably theirs.'}
+    };
+    this.courses = this.buildCourses();
+    this.byId = {}; this.courses.forEach(c=>this.byId[c.id]=c);
+
+    this.state = {
+      route:'login', loggedIn:false,
+      user:{name:'Alex Rivera', email:'alex.rivera@example.com', avatarColor:'#4F46E5'},
+      menuOpen:false,
+      enrolled:[{id:'c1',progress:62},{id:'c3',progress:28},{id:'c8',progress:90}],
+      completed:{ c1:this.firstN('c1',14), c3:this.firstN('c3',6), c8:this.firstN('c8',19) },
+      openCourseId:'c2',
+      currentLectureId:null,
+      openSections:[0],
+      playerTab:'overview',
+      noteText:'',
+      catCategory:'All', catSearch:'', catSort:'Most Popular',
+      navSearch:'',
+      notify:{announce:true, promos:false, replies:true, weekly:true, sound:false},
+      authName:'', authEmail:'', authPass:''
+    };
+  }
+
+  money(n){ return '$'+n.toFixed(2); }
+  initialsOf(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+  buildCourses(){
+    const CUR = {
+      webdev:[['Getting Started',['Course Introduction & Setup','How the Web Actually Works','Your Dev Environment','Reading Docs Like a Pro']],
+        ['Core Language',['Variables, Types & Operators','Functions & Scope','Arrays & Objects','Control Flow & Loops','Error Handling']],
+        ['Working with the DOM',['Selecting & Manipulating Elements','Events & Listeners','Forms & Validation','Fetching Data from APIs']],
+        ['Modern Tooling',['Modules & Bundlers','Async / Await Deep Dive','Working with npm','Debugging Strategies']],
+        ['Build a Real Project',['Project Walkthrough','Managing State','Deploying to Production','Next Steps & Resources']]],
+      design:[['Design Foundations',['Welcome to the Course','Principles of Visual Design','Color Theory in Practice','Typography Essentials']],
+        ['Working in Figma',['The Figma Interface','Frames, Layers & Components','Auto Layout Mastery','Styles & Variables']],
+        ['Designing Interfaces',['Layout & Grids','Designing for Mobile','Building a Design System','Iconography & Imagery']],
+        ['Prototyping & Handoff',['Interactive Prototypes','Smart Animate','Developer Handoff','Usability Testing']],
+        ['Portfolio Project',['Project Brief','From Wireframe to Hi-Fi','Presenting Your Work','Landing the Role']]],
+      data:[['Foundations',['Course Overview','Setting Up Python & Jupyter','NumPy Fundamentals','Pandas for Data Wrangling']],
+        ['Exploring Data',['Cleaning Messy Data','Exploratory Data Analysis','Data Visualization','Statistics Refresher']],
+        ['Machine Learning',['Intro to Machine Learning','Regression Models','Classification','Evaluating Your Model']],
+        ['Going Further',['Feature Engineering','Working with Real Datasets','Intro to Deep Learning','Deploying Models']],
+        ['Capstone',['Defining the Problem','Building the Pipeline','Presenting Insights','Course Wrap-up']]],
+      photo:[['Camera & Light',['Welcome & Gear Overview','Understanding Exposure','Aperture, Shutter & ISO','Reading Natural Light']],
+        ['Composition',['The Rule of Thirds & Beyond','Leading Lines & Framing','Telling a Story in a Frame','Shooting on Location']],
+        ['Studio & Portraits',['Studio Lighting Setups','Posing & Directing Subjects','Working with Color','Tethered Shooting']],
+        ['Editing',['Lightroom Workflow','Color Grading','Retouching Basics','Exporting for Print & Web']],
+        ['Your Body of Work',['Developing Your Style','Building a Portfolio','Finding Clients','Course Conclusion']]],
+      video:[['Getting Started',['Welcome & Workspace Tour','Importing & Organizing Media','Timeline Basics','Cuts & Pacing']],
+        ['The Edit',['Storytelling Through Editing','Transitions That Work','Working with Audio','Titles & Lower Thirds']],
+        ['Color & Motion',['Color Correction','Cinematic Color Grading','Motion Graphics Basics','Speed Ramping']],
+        ['Effects & Finishing',['Keyframing & Animation','Green Screen & Compositing','Sound Design','Export Settings']],
+        ['Final Project',['Planning Your Edit','Assembling the Cut','Final Polish','Publishing Your Work']]],
+      illus:[['Getting Started',['Welcome & Procreate Tour','Brushes & Gestures','Layers & Blend Modes','Color & Palettes']],
+        ['Drawing Fundamentals',['Sketching with Confidence','Line Work & Inking','Light & Shadow','Perspective Basics']],
+        ['Bringing Art to Life',['Flat Color & Rendering','Texture & Detail','Character Design','Backgrounds & Scenes']],
+        ['Style & Workflow',['Finding Your Style','Time-saving Workflows','Animation in Procreate','Exporting Your Art']],
+        ['Showcase Project',['The Final Piece','Composition & Story','Sharing Your Work','Next Steps']]]
+    };
+    const WYL = {
+      webdev:['Write clean, modern JavaScript with confidence','Build interactive interfaces from scratch','Work with APIs and handle asynchronous data','Structure and deploy a real production app','Debug effectively instead of guessing','Understand the fundamentals frameworks are built on'],
+      design:['Design polished interfaces in Figma','Apply color, type, and layout intentionally','Build and maintain a scalable design system','Create interactive, testable prototypes','Hand off cleanly to developers','Assemble a portfolio that gets interviews'],
+      data:['Manipulate data fluently with Pandas & NumPy','Explore and visualize datasets effectively','Train and evaluate machine learning models','Clean and prepare messy real-world data','Communicate insights to non-technical people','Deploy a model into a working pipeline'],
+      photo:['Shoot confidently in full manual mode','Read and shape light in any situation','Compose images that tell a story','Direct and pose people naturally','Edit a cohesive, professional workflow','Build a portfolio and find paying clients'],
+      video:['Edit a compelling story from raw footage','Apply cinematic color grades','Mix clean, balanced audio','Create motion graphics and titles','Use effects and compositing tastefully','Export optimized files for any platform'],
+      illus:['Draw confidently from sketch to finish','Master Procreate brushes and layers','Render light, shadow, and texture','Design characters and full scenes','Develop a recognizable personal style','Prepare and share artwork professionally']
+    };
+    const REVIEW_AUTHORS = [
+      {n:'Jordan M.',c:'#4F46E5'},{n:'Priya S.',c:'#0EA5A4'},{n:'Tom B.',c:'#F97316'},{n:'Elena R.',c:'#EC4899'},
+      {n:'David K.',c:'#8B5CF6'},{n:'Mei L.',c:'#16A34A'},{n:'Carlos V.',c:'#EF4444'},{n:'Hana K.',c:'#F59E0B'}
+    ];
+    const REVIEW_TEXTS = [
+      ['Exactly what I needed','The pacing is perfect and every lesson builds on the last. I finally understand concepts I had been faking for years.'],
+      ['Best course on the topic','Clear, practical, and zero fluff. The projects alone are worth the price several times over.'],
+      ['Worth every minute','I came in nervous and left genuinely confident. The instructor explains the why, not just the how.'],
+      ['Highly recommend','Production quality is excellent and the examples are real-world, not toy problems. Already applying it at work.'],
+      ['Career-changing','I landed a new role partly thanks to the portfolio piece I built in this course. Cannot recommend enough.'],
+      ['So well structured','Each section ends right where you want more, and the next one delivers. Binged it over a weekend.'],
+      ['Great for beginners','Assumes nothing and never talks down to you. The fundamentals section is gold.'],
+      ['Polished and practical','Loved the downloadable resources and the Q&A responses. You can tell the instructor actually cares.']
+    ];
+    const dur = (i)=>{ const m=4+((i*7)%15); const s=(i*23)%60; return m+':'+String(s).padStart(2,'0'); };
+
+    const seed = [
+      {id:'c1',title:'Modern JavaScript: From Zero to Expert',cat:'Web Development',key:'webdev',inst:'Sarah Chen',rating:4.8,reviews:12840,price:84.99,orig:139.99,hours:42,level:'All Levels',students:184320,short:'Master the language that runs the web, one project at a time.',bestseller:true},
+      {id:'c2',title:'UI/UX Design Masterclass: Figma to Prototype',cat:'Design',key:'design',inst:'Marcus Webb',rating:4.9,reviews:9870,price:94.99,orig:159.99,hours:38,level:'All Levels',students:142110,short:'Design beautiful, usable products and prototype them end to end.',bestseller:true},
+      {id:'c3',title:'Python for Data Science & Machine Learning',cat:'Data Science',key:'data',inst:'Dr. Aisha Rahman',rating:4.7,reviews:15230,price:89.99,orig:149.99,hours:54,level:'Beginner',students:201540,short:'Go from spreadsheets to trained models with real datasets.',bestseller:true},
+      {id:'c4',title:'Cinematic Video Editing with DaVinci Resolve',cat:'Video & Motion',key:'video',inst:'Leo Martins',rating:4.6,reviews:5420,price:79.99,orig:129.99,hours:31,level:'Intermediate',students:62300,short:'Cut, color, and finish videos that look truly cinematic.'},
+      {id:'c5',title:'Photography Foundations: Light, Composition & Story',cat:'Photography',key:'photo',inst:'Nina Köhler',rating:4.8,reviews:7110,price:74.99,orig:119.99,hours:26,level:'Beginner',students:98760,short:'Stop shooting on auto and start making intentional images.'},
+      {id:'c6',title:'React & TypeScript: Build Production Apps',cat:'Web Development',key:'webdev',inst:'Sarah Chen',rating:4.9,reviews:8640,price:99.99,orig:169.99,hours:46,level:'Intermediate',students:118900,short:'Ship robust, typed React apps the way modern teams do.',bestseller:true},
+      {id:'c7',title:'Brand Identity Design from Scratch',cat:'Design',key:'design',inst:'Marcus Webb',rating:4.7,reviews:4320,price:84.99,orig:139.99,hours:22,level:'All Levels',students:54210,short:'Craft logos, systems, and brand guidelines clients love.'},
+      {id:'c8',title:'Motion Graphics in After Effects',cat:'Video & Motion',key:'video',inst:'Leo Martins',rating:4.8,reviews:6190,price:89.99,orig:149.99,hours:34,level:'Intermediate',students:71450,short:'Animate type, logos, and scenes that grab attention.'},
+      {id:'c9',title:'SQL & Database Design Essentials',cat:'Data Science',key:'data',inst:'Dr. Aisha Rahman',rating:4.6,reviews:3980,price:69.99,orig:109.99,hours:19,level:'Beginner',students:48700,short:'Query, model, and reason about data with confidence.'},
+      {id:'c10',title:'Portrait Photography & Studio Lighting',cat:'Photography',key:'photo',inst:'Nina Köhler',rating:4.9,reviews:5260,price:79.99,orig:129.99,hours:24,level:'Intermediate',students:61200,short:'Light and direct portraits that feel alive and intentional.'},
+      {id:'c11',title:'CSS & Tailwind: Responsive Design Mastery',cat:'Web Development',key:'webdev',inst:'Sarah Chen',rating:4.7,reviews:7320,price:74.99,orig:119.99,hours:28,level:'All Levels',students:88300,short:'Build responsive, modern layouts without the guesswork.'},
+      {id:'c12',title:'Digital Illustration with Procreate',cat:'Illustration',key:'illus',inst:'Yuki Tanaka',rating:4.8,reviews:6740,price:69.99,orig:114.99,hours:21,level:'All Levels',students:73600,short:'Draw, render, and develop a style that is truly yours.'}
+    ];
+
+    return seed.map((c,ci)=>{
+      const blueprint = CUR[c.key];
+      let li=0; let totalLectures=0;
+      const curriculum = blueprint.map((sec,si)=>{
+        const lectures = sec[1].map((title,k)=>{
+          const id = c.id+'-s'+si+'-l'+k;
+          totalLectures++;
+          return {id, title, duration:dur(li++), preview:(si===0&&k<2)};
+        });
+        const mins = lectures.reduce((a,l)=>{const[m,s]=l.duration.split(':').map(Number);return a+m+s/60;},0);
+        return {title:sec[0], lectures, meta:lectures.length+' lectures • '+Math.round(mins)+' min'};
+      });
+      const reviewList = [0,1,2,3].map(j=>{
+        const a = REVIEW_AUTHORS[(ci*2+j)%REVIEW_AUTHORS.length];
+        const t = REVIEW_TEXTS[(ci+j)%REVIEW_TEXTS.length];
+        return {name:a.n, color:a.c, initials:this.initialsOf(a.n), rating:(j===2?4:5), title:t[0], text:t[1], ago:(j+1)+' week'+(j>0?'s':'')+' ago'};
+      });
+      const ratingDist = [78,15,5,1,1];
+      return {
+        ...c, monogram:this.initialsOf(c.title.replace(/[^A-Za-z ]/g,'')),
+        gradient:this.GRAD[c.key],
+        instructorInfo:this.INSTR[c.inst], instructorInitials:this.initialsOf(c.inst),
+        priceLabel:this.money(c.price), origLabel:this.money(c.orig),
+        reviewsLabel:c.reviews.toLocaleString(), studentsLabel:c.students.toLocaleString(),
+        whatYouLearn:WYL[c.key], curriculum, lectures:totalLectures, reviewList, ratingDist,
+        updated:'Updated June 2026',
+        longDesc:c.short+' This course is built around real, finished projects — not disconnected exercises. You will work through each concept hands-on, with downloadable resources, checkpoints, and a supportive Q&A community. By the end you will have work you are proud to show, and the confidence to keep going on your own.'
+      };
+    });
+  }
+
+  flatLectures(course){ const out=[]; course.curriculum.forEach(s=>s.lectures.forEach(l=>out.push(l))); return out; }
+  firstN(courseId,n){ const c=this.byId[courseId]; if(!c)return []; return this.flatLectures(c).slice(0,n).map(l=>l.id); }
+
+  go(route){ this.setState({route, menuOpen:false}); window.scrollTo(0,0); }
+  openCourse(id){ this.setState({route:'course', openCourseId:id, openSections:[0], menuOpen:false}); window.scrollTo(0,0); }
+  openPlayer(id){
+    const c=this.byId[id]; const first=this.flatLectures(c)[0];
+    const comp=this.state.completed[id]||[];
+    const next = this.flatLectures(c).find(l=>!comp.includes(l.id)) || first;
+    this.setState({route:'player', openCourseId:id, currentLectureId:next.id, playerTab:'overview', menuOpen:false}); window.scrollTo(0,0);
+  }
+  enroll(id){
+    const en=this.state.enrolled.slice();
+    if(!en.find(e=>e.id===id)){ en.push({id,progress:0}); }
+    const comp={...this.state.completed}; if(!comp[id]) comp[id]=[];
+    this.setState({enrolled:en, completed:comp},()=>this.openPlayer(id));
+  }
+  isEnrolled(id){ return !!this.state.enrolled.find(e=>e.id===id); }
+  toggleSection(i){ const o=this.state.openSections.slice(); const k=o.indexOf(i); if(k>=0)o.splice(k,1); else o.push(i); this.setState({openSections:o}); }
+  selectLecture(id){ this.setState({currentLectureId:id}); }
+  toggleComplete(courseId,lecId){
+    const comp={...this.state.completed}; const arr=(comp[courseId]||[]).slice();
+    const k=arr.indexOf(lecId); if(k>=0)arr.splice(k,1); else arr.push(lecId);
+    comp[courseId]=arr;
+    const c=this.byId[courseId]; const total=this.flatLectures(c).length;
+    const en=this.state.enrolled.map(e=>e.id===courseId?{...e,progress:Math.round(arr.length/total*100)}:e);
+    this.setState({completed:comp, enrolled:en});
+  }
+  doAuth(){ this.setState({loggedIn:true, route:'dashboard', menuOpen:false}); window.scrollTo(0,0); }
+  logout(){ this.setState({loggedIn:false, route:'login', menuOpen:false}); window.scrollTo(0,0); }
+
+  navStyle(active){
+    return 'background:'+(active?'#EEF2FF':'transparent')+';color:'+(active?'#4F46E5':'#475569')+';border:none;border-radius:9px;padding:8px 14px;font-family:\'Manrope\',sans-serif;font-weight:'+(active?'700':'600')+';font-size:14.5px;cursor:pointer;white-space:nowrap';
+  }
+  menuItemStyle(){ return 'width:100%;display:flex;align-items:center;gap:11px;background:none;border:none;border-radius:9px;padding:10px 11px;font-size:14px;font-weight:600;color:#334155;cursor:pointer;text-align:left'; }
+
+  renderVals(){
+    const s=this.state; const u=s.user;
+    const user={...u, initials:this.initialsOf(u.name), firstName:u.name.split(' ')[0]};
+    const route=s.route;
+    const isAuth = route==='login'||route==='signup';
+    const catActive = (route==='catalog'||route==='course'||route==='player');
+
+    const navItems=[
+      {label:'Dashboard', active:route==='dashboard'},
+      {label:'Browse', active:catActive},
+      {label:'My Learning', active:route==='mylearning'}
+    ].map(n=>({label:n.label, style:this.navStyle(n.active), onClick:()=>this.go(n.label==='Dashboard'?'dashboard':n.label==='Browse'?'catalog':'mylearning')}));
+
+    const menuItems=[
+      {label:'Profile', icon:'👤', onClick:()=>this.go('profile')},
+      {label:'Settings', icon:'⚙️', onClick:()=>this.go('profile')},
+      {label:'My Learning', icon:'📚', onClick:()=>this.go('mylearning')},
+      {label:'Log out', icon:'↩️', onClick:()=>this.logout()}
+    ].map(m=>({...m, style:this.menuItemStyle()}));
+
+    // dashboard data
+    const enrichEnrolled = s.enrolled.map(e=>{
+      const c=this.byId[e.id]; const flat=this.flatLectures(c); const comp=s.completed[e.id]||[];
+      const next=flat.find(l=>!comp.includes(l.id))||flat[flat.length-1];
+      const remaining=flat.length-comp.length;
+      return {id:c.id, title:c.title, category:c.cat, gradient:c.gradient, monogram:c.monogram,
+        instructor:c.inst, progress:e.progress, progressPct:e.progress+'%',
+        nextLecture:next?next.title:'Course complete', remainLabel:remaining+' lessons left',
+        rating:c.rating, lectures:c.lectures, hours:c.hours,
+        onResume:()=>this.openPlayer(c.id), onOpen:()=>this.openCourse(c.id)};
+    });
+    const enrolledIds=s.enrolled.map(e=>e.id);
+    const recommended=this.courses.filter(c=>!enrolledIds.includes(c.id)).slice(0,4).map(c=>({
+      id:c.id, title:c.title, instructor:c.inst, gradient:c.gradient, monogram:c.monogram,
+      rating:c.rating, priceLabel:c.priceLabel, onOpen:()=>this.openCourse(c.id)
+    }));
+    const hoursLearned=Math.round(enrichEnrolled.reduce((a,c)=>a+c.hours*c.progress/100,0));
+    const stats=[
+      {label:'Courses in progress', value:String(s.enrolled.length), delta:'active', deltaColor:'#16A34A'},
+      {label:'Hours learned', value:String(hoursLearned), delta:'+6 this wk', deltaColor:'#16A34A'},
+      {label:'Day streak', value:'7', delta:'🔥', deltaColor:'#F59E0B'},
+      {label:'Certificates', value:'2', delta:'earned', deltaColor:'#64748B'}
+    ];
+    const activity=[
+      {icon:'✅', bg:'#DCFCE7', text:'You completed “Async / Await Deep Dive” in Modern JavaScript', time:'2 hours ago'},
+      {icon:'🔥', bg:'#FEF3C7', text:'You hit a 7-day learning streak — nice work!', time:'Today, 8:10 AM'},
+      {icon:'📝', bg:'#EEF2FF', text:'You added a note in “Pandas for Data Wrangling”', time:'Yesterday'},
+      {icon:'⭐', bg:'#FCE7F3', text:'New lecture added to React & TypeScript', time:'2 days ago'}
+    ];
+    const signupPerks=[
+      {icon:'🎬', title:'Learn by building', desc:'Every course centers on real, finished projects you can show off.'},
+      {icon:'∞', title:'Lifetime access', desc:'Buy once, revisit anytime — across web and mobile.'},
+      {icon:'🏆', title:'Earn certificates', desc:'Shareable certificates to add to your profile and résumé.'},
+      {icon:'💬', title:'Real instructor support', desc:'Ask questions and get answers in active course Q&A.'}
+    ];
+
+    const today=new Date(2026,5,26);
+    const todayLabel=today.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'}).toUpperCase();
+
+    // ---- my learning ----
+    const mlFilter=s.mlFilter||'all';
+    const mlAll=s.enrolled.map(e=>{
+      const c=this.byId[e.id]; const flat=this.flatLectures(c); const comp=s.completed[e.id]||[];
+      const next=flat.find(l=>!comp.includes(l.id))||flat[flat.length-1];
+      return {id:c.id, title:c.title, category:c.cat, instructor:c.inst, gradient:c.gradient, monogram:c.monogram,
+        progress:e.progress, progressPct:e.progress+'%', done:e.progress===100,
+        completedLabel:comp.length+' / '+flat.length+' lessons',
+        nextLecture:next?next.title:'—', rating:c.rating, hours:c.hours,
+        btnLabel:e.progress===100?'Review →':'Resume →',
+        btnStyle:'background:'+(e.progress===100?'#16A34A':'#4F46E5')+';color:#fff;border:none;border-radius:11px;padding:13px 22px;font-family:\'Plus Jakarta Sans\',sans-serif;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 18px rgba(79,70,229,0.22)',
+        onResume:()=>this.openPlayer(c.id)};
+    });
+    const mlCourses=mlAll.filter(c=>mlFilter==='all'?true:mlFilter==='progress'?(c.progress<100):(c.progress===100));
+    const mlTabDefs=[['all','All'],['progress','In Progress'],['completed','Completed']];
+    const mlTabs=mlTabDefs.map(([k,label])=>({key:k, label, active:mlFilter===k,
+      onClick:()=>this.setState({mlFilter:k}),
+      style:'background:'+(mlFilter===k?'#4F46E5':'#fff')+';color:'+(mlFilter===k?'#fff':'#475569')+';border:1px solid '+(mlFilter===k?'#4F46E5':'#E2E8F0')+';border-radius:30px;padding:8px 18px;font-weight:700;font-size:13.5px;cursor:pointer'}));
+    const avatarOptions=['#4F46E5','#0EA5A4','#EC4899','#F59E0B','#8B5CF6','#16A34A'].map(col=>({color:col, active:u.avatarColor===col, activeStyle:'width:34px;height:34px;border-radius:50%;cursor:pointer;background:'+col+';box-shadow:0 0 0 '+(u.avatarColor===col?'3px #fff,0 0 0 5px '+col:'2px #E2E8F0'), onClick:()=>this.setState({user:{...u,avatarColor:col}})}));
+    const notifyDefs=[
+      ['announce','Course announcements','Updates and new lectures from instructors you follow'],
+      ['replies','Q&A replies','When an instructor or student replies to your question'],
+      ['weekly','Weekly progress digest','A Monday summary of your learning streak and goals'],
+      ['promos','Promotions & offers','Occasional deals on courses in your wishlist'],
+      ['sound','Completion sounds','Play a sound when you finish a lecture']
+    ];
+    const notify=notifyDefs.map(([k,label,desc])=>{
+      const on=!!s.notify[k];
+      return {key:k, label, desc, on,
+        onToggle:()=>this.setState({notify:{...s.notify,[k]:!s.notify[k]}}),
+        trackStyle:'width:44px;height:26px;border-radius:30px;flex-shrink:0;cursor:pointer;position:relative;transition:background 0.2s;background:'+(on?'#4F46E5':'#CBD5E1'),
+        knobStyle:'position:absolute;top:3px;left:'+(on?'21px':'3px')+';width:20px;height:20px;border-radius:50%;background:#fff;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)'};
+    });
+
+    // ---- catalog ----
+    const catNames=['All','Web Development','Design','Data Science','Photography','Video & Motion','Illustration'];
+    const categories=catNames.map(name=>{
+      const active=s.catCategory===name;
+      return { name, count:name==='All'?this.courses.length:this.courses.filter(c=>c.cat===name).length,
+        active, onClick:()=>this.setState({catCategory:name}),
+        btnStyle:'display:flex;align-items:center;justify-content:space-between;width:100%;background:'+(active?'#EEF2FF':'transparent')+';color:'+(active?'#4F46E5':'#475569')+';border:none;border-radius:9px;padding:9px 11px;font-size:14px;font-weight:'+(active?'700':'600')+';cursor:pointer;text-align:left',
+        countStyle:'font-size:12px;font-weight:700;color:'+(active?'#4F46E5':'#94A3B8')+';background:'+(active?'#fff':'#F1F5F9')+';border-radius:20px;padding:1px 9px' };
+    });
+    const sortOptions=['Most Popular','Highest Rated','Newest','Price: Low to High','Price: High to Low'];
+    let filtered=this.courses.filter(c=>
+      (s.catCategory==='All'||c.cat===s.catCategory) &&
+      (s.catSearch.trim()===''||(c.title+' '+c.inst+' '+c.cat).toLowerCase().includes(s.catSearch.trim().toLowerCase()))
+    );
+    const sorters={
+      'Most Popular':(a,b)=>b.students-a.students,
+      'Highest Rated':(a,b)=>b.rating-a.rating,
+      'Newest':(a,b)=>0,
+      'Price: Low to High':(a,b)=>a.price-b.price,
+      'Price: High to Low':(a,b)=>b.price-a.price
+    };
+    filtered=filtered.slice().sort(sorters[s.catSort]||(()=>0));
+    const catalogCourses=filtered.map(c=>({
+      id:c.id, title:c.title, instructor:c.inst, category:c.cat, gradient:c.gradient, monogram:c.monogram,
+      rating:c.rating, reviewsLabel:c.reviewsLabel, priceLabel:c.priceLabel, origLabel:c.origLabel,
+      level:c.level, hours:c.hours, bestseller:!!c.bestseller, short:c.short,
+      enrolled:this.isEnrolled(c.id), onOpen:()=>this.openCourse(c.id)
+    }));
+
+    // ---- course detail ----
+    const cur=this.byId[s.openCourseId]||this.courses[0];
+    const curEnrolled=this.isEnrolled(cur.id);
+    const curriculumView=cur.curriculum.map((sec,i)=>{
+      const open=s.openSections.includes(i);
+      return { title:sec.title, meta:sec.meta, open, idx:i,
+        onToggle:()=>this.toggleSection(i),
+        chevStyle:'transition:transform 0.2s;transform:rotate('+(open?'180':'0')+'deg);opacity:0.5',
+        lectures:sec.lectures.map(l=>({title:l.title, duration:l.duration, preview:l.preview}))
+      };
+    });
+    const totalCurLectures=cur.lectures;
+    const distLabels=['5','4','3','2','1'];
+    const ratingBars=cur.ratingDist.map((pct,i)=>({stars:distLabels[i], pct:pct+'%', pctLabel:pct+'%'}));
+    const relatedCourses=this.courses.filter(c=>c.id!==cur.id && c.cat===cur.cat).slice(0,3).map(c=>({
+      id:c.id, title:c.title, instructor:c.inst, gradient:c.gradient, monogram:c.monogram,
+      rating:c.rating, priceLabel:c.priceLabel, onOpen:()=>this.openCourse(c.id)
+    }));
+    const curProgress=curEnrolled?(s.enrolled.find(e=>e.id===cur.id).progress):0;
+
+    // ---- player ----
+    const pc=cur;
+    const pcomp=s.completed[pc.id]||[];
+    const pflat=this.flatLectures(pc);
+    const curLecId=s.currentLectureId||(pflat[0]&&pflat[0].id);
+    let curIdx=0; let secTitle=''; let curLec=pflat[0];
+    pc.curriculum.forEach((sec)=>sec.lectures.forEach(l=>{ if(l.id===curLecId){curLec=l; secTitle=sec.title;} }));
+    curIdx=pflat.findIndex(l=>l.id===curLecId);
+    const playerSections=pc.curriculum.map((sec,si)=>({
+      title:sec.title, meta:sec.lectures.length+' lectures',
+      lectures:sec.lectures.map(l=>{
+        const done=pcomp.includes(l.id); const active=l.id===curLecId;
+        return { title:l.title, duration:l.duration, done, active,
+          onClick:()=>this.selectLecture(l.id),
+          rowStyle:'display:flex;align-items:center;gap:11px;padding:11px 16px;cursor:pointer;border-left:3px solid '+(active?'#4F46E5':'transparent')+';background:'+(active?'#EEF2FF':'transparent'),
+          numStyle:'width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1.6px solid '+(done?'#16A34A':'#CBD5E1')+';background:'+(done?'#16A34A':'transparent'),
+          titleStyle:'flex:1;font-size:13.5px;line-height:1.35;color:'+(active?'#4338CA':'#334155')+';font-weight:'+(active?'700':'500') };
+      })
+    }));
+    const pCompletedCount=pcomp.length;
+    const pTotal=pflat.length;
+    const pPct=pTotal?Math.round(pCompletedCount/pTotal*100):0;
+    const curDone=pcomp.includes(curLecId);
+    const playerTabs=['overview','notes','qa'].map(t=>({
+      key:t, label:t==='overview'?'Overview':t==='notes'?'Notes':'Q&A',
+      active:s.playerTab===t, onClick:()=>this.setState({playerTab:t}),
+      style:'background:none;border:none;padding:14px 4px;margin-right:26px;font-family:\'Plus Jakarta Sans\',sans-serif;font-weight:700;font-size:15px;cursor:pointer;color:'+(s.playerTab===t?'#4F46E5':'#64748B')+';border-bottom:2.5px solid '+(s.playerTab===t?'#4F46E5':'transparent')
+    }));
+
+    return {
+      // routing flags
+      isLogin:route==='login', isSignup:route==='signup', isDash:route==='dashboard',
+      isCatalog:route==='catalog', isCourse:route==='course', isPlayer:route==='player',
+      isMyLearning:route==='mylearning', isProfile:route==='profile',
+      showNav:s.loggedIn && !isAuth,
+      // nav
+      navItems, menuItems, menuOpen:s.menuOpen, user,
+      navSearch:s.navSearch,
+      onNavSearch:(e)=>this.setState({navSearch:e.target.value}),
+      onNavSearchKey:(e)=>{ if(e.key==='Enter'){ this.setState({catSearch:s.navSearch, route:'catalog', catCategory:'All'}); window.scrollTo(0,0);} },
+      toggleMenu:()=>this.setState({menuOpen:!s.menuOpen}),
+      goDash:()=>this.go('dashboard'), goCatalog:()=>this.go('catalog'),
+      goMyLearning:()=>this.go('mylearning'), goLogin:()=>this.go('login'),
+      goSignup:()=>this.go('signup'), logout:()=>this.logout(),
+      // auth
+      authName:s.authName, authEmail:s.authEmail, authPass:s.authPass,
+      onAuthName:(e)=>this.setState({authName:e.target.value}),
+      onAuthEmail:(e)=>this.setState({authEmail:e.target.value}),
+      onAuthPass:(e)=>this.setState({authPass:e.target.value}),
+      doAuth:()=>this.doAuth(),
+      signupPerks,
+      // dashboard
+      todayLabel, streak:7, stats,
+      continueCourses:enrichEnrolled, recommended, activity,
+      // catalog
+      categories, catalogCourses, sortOptions,
+      catSearch:s.catSearch, catSort:s.catSort,
+      catCount:catalogCourses.length, catCategory:s.catCategory,
+      levelFilters:['Beginner','Intermediate','All Levels'],
+      catLabelSuffix:(s.catCategory!=='All'?' in '+s.catCategory:'')+(s.catSearch.trim()?' for “'+s.catSearch.trim()+'”':''),
+      catEmpty:catalogCourses.length===0,
+      onCatSearch:(e)=>this.setState({catSearch:e.target.value}),
+      onCatSort:(e)=>this.setState({catSort:e.target.value}),
+      clearFilters:()=>this.setState({catCategory:'All',catSearch:''}),
+      // course detail
+      cur, curriculumView, ratingBars, relatedCourses,
+      curEnrolled, curNotEnrolled:!curEnrolled, curProgress, curProgressPct:curProgress+'%',
+      curIncludes:[
+        {icon:'🎬', label:cur.hours+' hours of on-demand video'},
+        {icon:'📄', label:'24 downloadable resources'},
+        {icon:'∞', label:'Full lifetime access'},
+        {icon:'📱', label:'Access on mobile and desktop'},
+        {icon:'🏆', label:'Certificate of completion'}
+      ],
+      curLevel:cur.level, curHours:cur.hours+' hours on-demand',
+      curLecturesLabel:totalCurLectures+' lectures',
+      onEnroll:()=>this.enroll(cur.id),
+      onResumeCur:()=>this.openPlayer(cur.id),
+      backToCatalog:()=>this.go('catalog'),
+      // player
+      pc, playerSections, curLec, curLecSection:secTitle,
+      pPct, pPctLabel:pPct+'%', pCompletedCount, pTotal,
+      curLecNum:(curIdx+1), curDone, curNotDone:!curDone,
+      playerTab:s.playerTab, playerTabs,
+      isOverviewTab:s.playerTab==='overview', isNotesTab:s.playerTab==='notes', isQaTab:s.playerTab==='qa',
+      markComplete:()=>this.toggleComplete(pc.id,curLecId),
+      nextLecture:()=>{ const n=pflat[curIdx+1]; if(n)this.selectLecture(n.id); },
+      prevLecture:()=>{ const p=pflat[curIdx-1]; if(p)this.selectLecture(p.id); },
+      hasNext:curIdx<pflat.length-1, hasPrev:curIdx>0,
+      noteText:s.noteText, onNoteText:(e)=>this.setState({noteText:e.target.value}),
+      backToCourse:()=>this.openCourse(pc.id),
+      qaList:[
+        {name:'Maya T.',initials:'MT',color:'#0EA5A4',ago:'3 days ago',q:'Is it okay to use a different editor than the one shown in the video?',a:'Absolutely — everything here works in any editor. Use whatever you are comfortable with.',answers:2},
+        {name:'Devon P.',initials:'DP',color:'#8B5CF6',ago:'1 week ago',q:'I got stuck on the project setup step — anything obvious I might be missing?',a:'Double-check your version in the terminal; that trips most people up at this stage.',answers:5}
+      ],
+      // my learning
+      myLearning:mlCourses, mlFilter, mlTabs, mlEmpty:mlCourses.length===0,
+      mlInProgress:s.enrolled.filter(e=>e.progress<100&&e.progress>0).length,
+      mlCompleted:s.enrolled.filter(e=>e.progress===100).length,
+      mlTotal:s.enrolled.length,
+      // profile
+      notify, profileInitials:user.initials,
+      onUserName:(e)=>this.setState({user:{...u,name:e.target.value}}),
+      onUserEmail:(e)=>this.setState({user:{...u,email:e.target.value}}),
+      avatarOptions
+    };
+  }
+}
+</script>
+</body>
+</html>

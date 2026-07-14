@@ -1,0 +1,17 @@
+- generic [active] [ref=f7e1]:
+  - banner [ref=f7e3]:
+    - link "lumio" [ref=f7e4] [cursor=pointer]:
+      - /url: /dashboard
+    - navigation [ref=f7e9]:
+      - link "Dashboard" [ref=f7e10] [cursor=pointer]:
+        - /url: /dashboard
+      - link "Browse" [ref=f7e11] [cursor=pointer]:
+        - /url: /catalog
+      - link "My Learning" [ref=f7e12] [cursor=pointer]:
+        - /url: /my-learning
+    - textbox "Search courses" [ref=f7e17]
+    - link "Cart" [ref=f7e18] [cursor=pointer]:
+      - /url: /cart
+    - button "Notifications" [ref=f7e24] [cursor=pointer]
+    - button "JL" [ref=f7e29] [cursor=pointer]
+  - alert [ref=f7e35]

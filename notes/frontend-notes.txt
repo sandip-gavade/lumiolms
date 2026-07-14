@@ -1,0 +1,81 @@
+←  ☐ Build scope  ☐ Checkout/Stripe  ☐ Tenant handling  ✔ Submit  →
+
+The provided design only covers the student experience (auth, dashboard, catalog, course detail, player, my learning, profile). The backend also supports instructor, org-admin, and super-admin roles. How should I
+scope the build?
+
+❯ 1. Student app first, full depth (Recommended)
+     Build the complete student-facing app exactly per the design, fully wired to the real API (auth, catalog, cart/checkout, enrollment, player with progress/notes/Q&A, certificates, profile).
+     Instructor/org-admin/super-admin get a follow-up pass afterward, in matching visual style.
+  2. Everything now, all roles
+     In this same pass, also design and build instructor dashboard, org-admin console, and super-admin console (extending the same design system to new screens I design). Significantly larger scope, longer build.
+  3. Student app only
+     Only build the student-facing experience from the design. Skip instructor/org-admin/super-admin UI entirely for now — those backend modules stay API-only.
+  4. Type something.
+  
+←  ☒ Build scope  ☐ Checkout/Stripe  ☐ Tenant handling  ✔ Submit  →
+
+Payments: the backend has a full Stripe checkout/webhook flow. How should checkout work in the frontend for this build?
+
+❯ 1. Stripe Checkout redirect (Recommended)
+     Use Stripe-hosted Checkout session (simplest, matches typical NestJS+Stripe backend setup, avoids handling card fields directly).
+  2. Stripe Elements embedded
+     Embed Stripe Elements/Payment Element directly in the cart/checkout page for a fully custom in-app checkout UI.
+  3. Mock/stub checkout for now
+     Wire the cart and order flow end-to-end but stub the actual payment step (e.g. auto-mark paid in dev) so checkout UX is deferred.
+  4. Type something.
+  
+
+
+←  ☒ Build scope  ☒ Checkout/Stripe  ☐ Tenant handling  ✔ Submit  →
+
+Multi-tenancy in the frontend: backend resolves tenant from subdomain or an x-tenant-id header (dev). How should lumio-fe handle tenant context for local/docker-compose dev?
+
+❯ 1. Single dev tenant via env var (Recommended)
+     Frontend sends a fixed x-tenant-id (from NEXT_PUBLIC_TENANT_ID env var) for all requests — simplest for docker-compose local dev, no subdomain routing needed.
+  2. Subdomain-based 
+     Set up local subdomain routing (e.g. acme.localhost:3000) so the frontend mirrors production tenant resolution exactly.
+  3. Type something.
+  
+  
+←  ☒ Build scope  ☒ Checkout/Stripe  ☒ Tenant handling  ✔ Submit  →
+
+Review your answers
+
+ ● The provided design only covers the student experience (auth, dashboard, catalog, course detail, player, my learning, profile). The backend also supports instructor, org-admin, and super-admin roles. How should
+   I scope the build?
+   → Student app first, full depth (Recommended)
+ ● Payments: the backend has a full Stripe checkout/webhook flow. How should checkout work in the frontend for this build?
+   → Stripe Checkout redirect (Recommended)
+ ● Multi-tenancy in the frontend: backend resolves tenant from subdomain or an x-tenant-id header (dev). How should lumio-fe handle tenant context for local/docker-compose dev?
+   → Single dev tenant via env var (Recommended)
+
+Ready to submit your answers?
+
+
+
+
+jamie.learner@example.com
+learnlumio123
+
+
+ Done
+
+  Built the complete lumio-fe frontend (Next.js 14, TypeScript, Tailwind) matching the design mock exactly, fully wired to the real lumio-be NestJS API, and running as a Docker Compose stack alongside
+  Postgres/Redis. Verified end-to-end in a real browser: signup → catalog → course detail → cart → checkout (dev-mode Stripe) → video player with progress/notes/Q&A → my learning → certificates.
+
+  Pages built: login/signup/forgot-password/reset-password/verify-email, dashboard, catalog (search/filter/sort/pagination), course detail (curriculum accordion, reviews, purchase card), cart, orders + order
+  detail (refunds), course player (progress, notes, Q&A, certificates auto-issue), my learning, profile, certificates.
+
+  Infrastructure:
+  - lib/api/* — typed fetch client with auto refresh-on-401, one module per backend resource
+  - Zustand auth store (persisted) + TanStack Query for all server state
+  - lumio-be/scripts/seed-demo.ts — seeds a fixed-UUID tenant, 6 categories, 6 instructors, 6 full courses with sections/lectures (npm run seed:demo)
+  - lumio-fe/Dockerfile + docker-compose wiring — docker compose up --build boots the whole stack
+
+  Scope note: per your earlier choice, this covers the student experience only — instructor/org-admin/super-admin consoles (which had no design provided) are still API-only. Say the word if you want those built
+  next in matching style.
+
+  Known gaps (backend has no endpoint for these, so I didn't fake them): editing name/email in Profile, and per-type notification preference toggles — both would need new backend routes first.
+
+  To run it yourself: docker compose up --build, then cd lumio-be && npm run seed:demo once, then visit http://localhost:3000. Demo instructor logins are {firstname}.{lastname}@lumio.dev / password123; students
+  just sign up.

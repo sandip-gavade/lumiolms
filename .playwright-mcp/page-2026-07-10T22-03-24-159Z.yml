@@ -1,0 +1,32 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - link "lumio" [ref=e5] [cursor=pointer]:
+        - /url: /login
+      - heading "Welcome back" [level=1] [ref=e10]
+      - paragraph [ref=e11]: Pick up right where you left off.
+      - generic [ref=e12]:
+        - generic [ref=e13]: Email
+        - textbox "you@example.com" [ref=e14]
+        - generic [ref=e15]:
+          - generic [ref=e16]: Password
+          - link "Forgot password?" [ref=e17] [cursor=pointer]:
+            - /url: /forgot-password
+        - textbox "••••••••" [ref=e18]
+        - button "Log in" [ref=e19] [cursor=pointer]
+      - paragraph [ref=e20]:
+        - text: New to lumio?
+        - link "Create an account" [ref=e21] [cursor=pointer]:
+          - /url: /signup
+    - generic [ref=e25]:
+      - generic [ref=e26]: ★ Rated 4.8 by 40,000+ learners
+      - heading "Learn by building real projects." [level=2] [ref=e27]
+      - paragraph [ref=e28]: Hands-on courses in code, design, data, and film — taught by people who actually ship.
+      - generic [ref=e29]:
+        - paragraph [ref=e30]: “I went from copy-pasting tutorials to shipping my own apps in three months. The project-based path just clicks.”
+        - generic [ref=e31]:
+          - generic [ref=e32]: PR
+          - generic [ref=e33]:
+            - generic [ref=e34]: Priya R.
+            - generic [ref=e35]: Frontend Developer
+  - alert [ref=e36]

@@ -1,0 +1,15 @@
+export const queryKeys = {
+  cart: ['cart'] as const,
+  categories: ['categories'] as const,
+  courses: (params: unknown) => ['courses', params] as const,
+  course: (slug: string) => ['course', slug] as const,
+  reviews: (courseId: string) => ['reviews', courseId] as const,
+  myLearning: ['my-learning'] as const,
+  courseProgress: (courseId: string) => ['course-progress', courseId] as const,
+  notes: (lectureId: string) => ['notes', lectureId] as const,
+  questions: (courseId: string) => ['questions', courseId] as const,
+  certificates: ['certificates'] as const,
+  notifications: ['notifications'] as const,
+  orders: ['orders'] as const,
+  order: (id: string) => ['order', id] as const,
+};
