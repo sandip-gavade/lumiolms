@@ -1,5 +1,8 @@
 # Lumio LMS
 
+[![Build Status](https://github.com/sandip-gavade/lumiolms/actions/workflows/ci.yml/badge.svg)](https://github.com/sandip-gavade/lumiolms/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Multi-tenant B2B SaaS Learning Management System. Organizations sign up as tenants and get a
 branded instance with their own Students, Instructors, and Org Admins, plus a platform-level
 Super Admin role across all tenants. Supports paid courses via Stripe.
